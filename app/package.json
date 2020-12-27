@@ -1,0 +1,13 @@
+{
+  "name": "HLSIngest",
+  "productName": "HLSIngest",
+  "version": "0.0.1",
+  "description": "electron template for fast develop",
+  "main": "./main.prod.js",
+  "scripts": {
+    "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}
