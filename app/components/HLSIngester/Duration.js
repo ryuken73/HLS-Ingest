@@ -30,7 +30,11 @@ function Duration(props) {
                     mt={"1px"}
                     mb={"1px"}
                 ></SmallMarginTextField> 
-                <SmallButton>
+                <SmallButton
+                    color="secondary" 
+                    variant={"contained"} 
+                    bgcolor="#191d2e" 
+                >
                     playback
                 </SmallButton>
             </Box>

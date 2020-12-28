@@ -24,9 +24,9 @@ function App(props) {
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" height="1">
-        <HeaderContainer 
+        {/* <HeaderContainer 
           setConfirmOpen={setConfirmOpen}
-        ></HeaderContainer>
+        ></HeaderContainer> */}
         <HLSIngest></HLSIngest>
         <MessageContainer mt="auto"></MessageContainer> 
       </Box>

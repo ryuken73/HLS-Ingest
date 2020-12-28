@@ -20,13 +20,17 @@ function ClipSelector() {
                 size="small"
             />
             <Typography variant='body1'>Clip</Typography>
-            <Autocomplete
-                placeholder="hour"
-            ></Autocomplete>
-            <Autocomplete
-                placeholder="clip"
-                width={300}
-            ></Autocomplete>
+            <Box ml="10px">
+                <Autocomplete
+                    placeholder="hour"
+                ></Autocomplete>
+            </Box>
+            <Box ml="2px">
+                <Autocomplete
+                    placeholder="clip"
+                    width={300}
+                ></Autocomplete>
+            </Box>
         </Box>
     )
 }

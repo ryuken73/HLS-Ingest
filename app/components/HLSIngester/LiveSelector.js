@@ -20,13 +20,17 @@ function LiveSelector() {
                 size="small"
             />
             <Typography variant='body1'>Live</Typography>
-            <Autocomplete
-                placeholder="area"
-            ></Autocomplete>
-            <Autocomplete
-                placeholder="cctv"
-                width={300}
-            ></Autocomplete>
+            <Box ml="10px">
+                <Autocomplete
+                    placeholder="area"
+                ></Autocomplete>
+            </Box>
+            <Box m="0px">
+                <Autocomplete
+                    placeholder="cctv"
+                    width={300}
+                ></Autocomplete>
+            </Box>
         </Box>
     )
 }

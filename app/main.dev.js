@@ -94,11 +94,11 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: width / 70,
-    minWidth: 1012,
+    minWidth: 400,
     minHeight: 750,
     height: height / 30,
     backgroundColor: '#252839',
-    title: 'HLS Recorder',
+    title: 'HLS Ingest',
     minimizable: false,
     webPreferences: {
       nodeIntegration: true,
