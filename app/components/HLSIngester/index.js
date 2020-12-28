@@ -1,13 +1,14 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import LiveSelector from './LiveSelector';  
+import LiveSelectorContainer from '../../containers/LiveSelectorContainer';  
 import ClipSelector from './ClipSelector';  
 import BorderedBox from '../template/BorderedBox';
 import BorderedList from '../template/BorderedList';
 import {BasicButton} from '../template/basicComponents';
 import {SmallButton} from '../template/smallComponents';
 import Duration from './Duration';
+// import HLSPlayerContainer from '../../containers/HLSPlayerContainer';
 import HLSPlayer from './HLSPlayer';
 
 const bgColors = {
@@ -18,24 +19,26 @@ const bgColors = {
     'stopped': 'black'
 }
 
-function HLSIngest() {
+function HLSIngest(props) {
+    const {channelNumber} = props;
     return (
         <BorderedBox
             bgcolor="#232738"
             display="flex"
             flexDirection="column"
             flexGrow={0}
-            // width={200}
+            width={610}
             // bgcolor="#2d2f3b"
         >
-            <Duration bgColors={bgColors}></Duration>
+            <Duration channelNumber={channelNumber} bgColors={bgColors}></Duration>
             <BorderedBox height="100px" display="flex" alignItems="center" bgcolor="#232738">
                 <Box display="flex" flexDirection="column" padding="5px">
                     <Typography variant="body1">Source</Typography>
-                    <LiveSelector></LiveSelector>
-                    <ClipSelector></ClipSelector>
+                    <LiveSelectorContainer channelNumber={channelNumber}></LiveSelectorContainer>
+                    <ClipSelector channelNumber={channelNumber}></ClipSelector>
                 </Box>
                 <BasicButton 
+                    channelNumber={channelNumber}
                     color="secondary" 
                     variant={"contained"} 
                     bgcolor="#191d2e" 
@@ -44,7 +47,7 @@ function HLSIngest() {
                 >INGEST</BasicButton>
             </BorderedBox>
             <BorderedBox>
-                <HLSPlayer></HLSPlayer>
+                <HLSPlayer channelNumber={channelNumber}></HLSPlayer>
             </BorderedBox>
         </BorderedBox>
     )

@@ -11,16 +11,18 @@ function ClipSelector() {
             display="flex"
             alignItems="center"
         >
-            <Radio
-                checked={true}
-                onChange={handleChange}
-                value="a"
-                name="radio-button-demo"
-                inputProps={{ 'aria-label': 'A' }}
-                size="small"
-            />
-            <Typography variant='body1'>Clip</Typography>
-            <Box ml="10px">
+            <Box display="flex" alignItems="center" width="80px">
+                <Radio
+                    checked={true}
+                    onChange={handleChange}
+                    value="a"
+                    name="radio-button-demo"
+                    inputProps={{ 'aria-label': 'A' }}
+                    size="small"
+                />
+                <Typography variant='body1'>Clip</Typography>
+            </Box>
+            <Box ml="5px">
                 <Autocomplete
                     placeholder="hour"
                 ></Autocomplete>

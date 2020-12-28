@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import HLSPlayer from '../components/HLSRecorder/HLSPlayer';
+import HLSPlayer from '../components/HLSIngester/HLSPlayer';
 import * as hlsPlayersActions from '../modules/hlsPlayers';
 
 

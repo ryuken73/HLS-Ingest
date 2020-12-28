@@ -7,11 +7,12 @@ import {SmallMarginTextField, SmallButton}  from '../template/smallComponents';
 function Duration(props) {
     // console.log('rerender Title:', props)
     const {
-        channelName="channelX", 
+        channelNumber="1", 
         recorderStatus="stopped", 
         duration="00:00:00.00",
         bgColors={}
     } = props;
+    const channelName = `ingest${channelNumber}`
     const inRecording = recorderStatus === 'started';
     const inTransition = recorderStatus === 'starting' || recorderStatus === 'stopping';
     const bgColor = bgColors[recorderStatus];
@@ -45,7 +46,7 @@ function Duration(props) {
             subject={channel.subject} 
             titlewidth={"80px"}
             content={channel.content} 
-            // color={"white"}
+            color={"white"}
             border={1}
             ml={"3px"}
             my={"2px"}

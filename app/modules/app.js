@@ -12,34 +12,41 @@ const sourceStore = electronUtil.createElectronStore({
     name:'sourceStore',
     cwd:remote.app.getPath('home')
 });
-const intervalStore = electronUtil.createElectronStore({
-    name:'intervalStore',
-    cwd:remote.app.getPath('home')
-});
 
-const cctvFromConfig = require('../lib/getCCTVList');
-const sources = cctvFromConfig();
+const {getDefaultConfig} = require('../lib/getConfig');
+const config = getDefaultConfig();
+
+const {
+    NUMBER_OF_CHANNELS
+} = config;
+
+const arrayBetween = (from, to) => {
+    const resultArray = [];
+    for(let i=from;i<=to;i++){
+        resultArray.push(i)
+    }
+    return resultArray;
+}
+
+const channels = arrayBetween(1, NUMBER_OF_CHANNELS)
 
 // action types
-const SET_SOURCES = 'app/SET_SOURCES';
+const SET_CHANNELS = 'body/SET_CHANNELS';
 
 // action creator
-export const setSources = createAction(SET_SOURCES);
+export const setChannels = createAction(SET_CHANNELS);
 
 const initialState = {
-    sources,
-    clipStore,
-    sourceStore,
-    intervalStore
+    channels
 }
 
 // reducer
 export default handleActions({
-    [SET_SOURCES]: (state, action) => {
-        const {sources} = action.payload;
+    [SET_CHANNELS]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {channels} = action.payload;
         return {
-            ...state,
-            sources
+            channels
         }
     },
 }, initialState);

@@ -21,13 +21,13 @@ function App(props) {
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [dialogTitle, setDialogTitle] = React.useState('Really Reload?');
   const [dialogText, setDialogText] = React.useState('Reload will stop current recordings and schedules. OK?');
+  const {channels=[1,2]} = props;
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" height="1">
-        {/* <HeaderContainer 
-          setConfirmOpen={setConfirmOpen}
-        ></HeaderContainer> */}
-        <HLSIngest></HLSIngest>
+        <Box display="flex">
+          {channels.map(channelNumber => (<HLSIngest key={channelNumber} channelNumber={channelNumber}></HLSIngest>))}
+        </Box>
         <MessageContainer mt="auto"></MessageContainer> 
       </Box>
     </ThemeProvider>

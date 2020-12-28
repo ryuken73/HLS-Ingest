@@ -9,10 +9,10 @@ import * as appActions from '../modules/app';
 
 function mapStateToProps(state, ownProps) {
   // console.log('mapStateToProps:',state) 
-  const {sources} = state.app;
+  const {channels} = state.app;
   return {
     ...ownProps,
-    sources
+    channels
   }
 }
 

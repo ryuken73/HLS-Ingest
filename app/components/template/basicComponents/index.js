@@ -59,7 +59,7 @@ const BasicIconButton = styled(IconButton)`
 const BasicTextField = styled(TextField)`
     padding: ${props => props.padding || "0px"};
     .MuiInputBase-root {
-        background: ${props => props.bgcolor || blueGrey[900]};
+        background: ${props => props.bgcolor || "#191d2e"};
         input {
             color: ${props => props.color || "white"};
         }

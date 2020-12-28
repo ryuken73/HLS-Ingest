@@ -33,7 +33,8 @@ const HLSPlayer = (props) => {
     const {
         setPlayer=()=>{},
         refreshPlayer=()=>{}
-    } = props
+    // } = props.HLSPlayersActions;
+    } = props;
 
     const srcObject = {
         src: source.url,

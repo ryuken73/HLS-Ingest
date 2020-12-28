@@ -93,7 +93,7 @@ app.on('ready', async () => {
   const {width,height} = screen.getPrimaryDisplay().workAreaSize;
   mainWindow = new BrowserWindow({
     show: false,
-    width: width / 70,
+    width: 1250,
     minWidth: 400,
     minHeight: 750,
     height: height / 30,
