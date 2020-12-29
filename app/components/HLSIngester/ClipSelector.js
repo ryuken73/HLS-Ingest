@@ -13,11 +13,12 @@ function ClipSelector(props) {
         savedClips=[],
         active=true,
         disabled=false,
-        selectedHour=6
+        withinHour=6
     } = props;
 
     const {
-        limitClips=()=>{},
+        // updateCurrentClips=()=>{},
+        setWithinHours=()=>{},
         setCurrentClip=()=>{}
     } = props.ClipSelectorActions;
 
@@ -30,7 +31,8 @@ function ClipSelector(props) {
         setChannelActiveSource({channelNumber, sourceFrom: event.target.value});
     };
     const handleChangeHour = (event, value) => {
-        limitClips(channelNumber, value)
+        // updateCurrentClips(channelNumber, value)
+        setWithinHours({channelNumber, hours: value})
     }
     const setClipSource = (event, value) => {
         // setCurrentClip({channelNumber, clipInfo: value});

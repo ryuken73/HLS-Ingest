@@ -11,18 +11,20 @@ import * as hlsPlayersActions from '../modules/hlsPlayers';
 function mapStateToProps(state, ownProps) {
   // console.log('mapStateToProps:',state) 
   const {channelNumber} = ownProps;
-  const {hours, currentClips, selectedHour} = state.clipSelector;
+  const {hours, baseClips, withinHours} = state.clipSelector;
   const {channelActiveSource} = state.activeSources;
   const active = channelActiveSource.get(channelNumber) === 'clip';
   const disabled = !active;
+  const savedClips = baseClips.get(channelNumber).filter(() => {return true})
+  const withinHour = withinHours.get(channelNumber)
 
   return {
     ...ownProps,
     hours,
-    savedClips: currentClips.get(channelNumber),
+    savedClips,
     active,
     disabled,
-    selectedHour
+    withinHour
   }
 }
 

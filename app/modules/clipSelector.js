@@ -5,7 +5,10 @@ const {getDefaultConfig} = require('../lib/getConfig');
 const config = getDefaultConfig();
 
 const {
-    DISPLAY_HOURS=[1,3,6,10,15,24]
+    NUMBER_OF_CHANNELS,
+    DISPLAY_HOURS=[1,3,6,10,15,24],
+    DEFAULT_HOURS=3,
+    // AUTO_UPDATE_CLIP=true
 } = config;
 
 const hours = DISPLAY_HOURS.map(hour => {
@@ -20,52 +23,53 @@ const clipStore = new Store({
     cwd:remote.app.getPath('home')
 });
 
-const savedClipsObj = clipStore.store;
-const savedClipsArray = Object.values(savedClipsObj)
 const {createClipData} = require('../lib/clipInfo');
-const savedClips = savedClipsArray.map(clip => createClipData(clip))
+const getClipData = (clipStore) => {
+    const savedClipsObj = clipStore.store;
+    const savedClipsArray = Object.values(savedClipsObj)
+    return savedClipsArray.map(clip => createClipData(clip))
+}
+const makeBaseClips = savedClips => {
+    const baseClips = new Map();
+    for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
+        baseClips.set(channelNumber, savedClips)
+    }
+    return baseClips;
+}
+const makeWithinHours = () => {
+    const withinHours = new Map();
+    for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
+        withinHours.set(channelNumber, DEFAULT_HOURS)
+    }
+    return withinHours;
+}
+
+const savedClips = getClipData(clipStore);
+const baseClips = makeBaseClips(savedClips);
+const withinHours = makeWithinHours();
 
 // initialize channel's saved clip
-const {
-    NUMBER_OF_CHANNELS
-} = config;
-
-const baseClips = new Map();
-for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
-    baseClips.set(channelNumber, savedClips)
-}
-const currentClips = baseClips;
 const currentClip = new Map();
 
 // action types
 const SET_WITHIN_HOURS = 'clipSelector/SET_WITHIN_HOURS';
 const SET_CURRENT_CLIP = 'clipSelector/SET_CURRENT_CLIP';
-const SET_CURRENT_CLIPS = 'clipSelector/SET_CURRENT_CLIPS';
+const SET_BASE_CLIPS = 'clipSelector/SET_BASE_CLIPS';
+
 
 // action creator
 export const setWithinHours = createAction(SET_WITHIN_HOURS);
 export const setCurrentClip = createAction(SET_CURRENT_CLIP);
-export const setCurrentClips = createAction(SET_CURRENT_CLIPS);
+export const setBaseClips = createAction(SET_BASE_CLIPS);
 
 // thunk
-export const limitClips = (channelNumber, withinHours) => (dispatch, getState) => {
-    const state = getState();
-    const {baseClips} = state.clipSelector;
-    console.log('$$$', channelNumber, withinHours, baseClips);
-    // if(selectedArea === null){
-    //     dispatch(setCurrentSources({channelNumber, channelSources:[...baseSources]}));
-    //     return
-    // }
-    // const limitedSources = baseSources.filter(source => source.area === selectedArea.title);
-    // dispatch(setCurrentSources({channelNumber, channelSources: limitedSources}))
-}
 
 const initialState = {
     hours,
-    withinHours:3,
+    withinHours,
     baseClips,
     currentClip,
-    currentClips
+    // currentClips
 }
 
 // reducer
@@ -82,16 +86,24 @@ export default handleActions({
             currentClip: newCurrentClip
         }
     },
-    [SET_CURRENT_CLIPS]: (state, action) => {
+    [SET_WITHIN_HOURS]: (state, action) => {
         // console.log('%%%%%%%%%%%%%%%%', action.payload);
-        const {channelNumber, limitedClips} = action.payload;
-        const {currentClips} = state;
-        currentClips.set(channelNumber, limitedClips);
-        const newCurrentClips = new Map(currentClips);
+        const {channelNumber, hours} = action.payload;
+        const {withinHours} = state;
+        withinHours.set(channelNumber, hours);
+        const newWithinHours = new Map(withinHours);
         
         return {
             ...state,
-            currentClips: newCurrentClips
+            withinHours: newWithinHours
+        }
+    },
+    [SET_BASE_CLIPS]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {baseClips} = action.payload;      
+        return {
+            ...state,
+            baseClips
         }
     }
 }, initialState);
