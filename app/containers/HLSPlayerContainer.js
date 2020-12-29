@@ -9,7 +9,6 @@ function mapStateToProps(state, ownProps) {
   const {channelNumber} = ownProps;
   const {config} = state.hlsPlayers;
   const hlsPlayer = state.hlsPlayers.players.get(channelNumber);
-  // console.log('####', hlsPlayer)
 
   return {
     player: hlsPlayer.player,

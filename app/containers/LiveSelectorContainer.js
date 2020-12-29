@@ -5,20 +5,29 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import LiveSelector from '../components/HLSIngester/LiveSelector';
 import * as liveSelectorActions from '../modules/liveSelector';
+import * as activeSourcesActions from '../modules/activeSources';
+import * as hlsPlayersActions from '../modules/hlsPlayers';
 
 
 function mapStateToProps(state, ownProps) {
   // console.log('mapStateToProps:',state) 
-  const {sources, areas} = state.liveSelector;
+  const {channelNumber} = ownProps;
+  const {currentSources, areas} = state.liveSelector;
+  const {channelActiveSource} = state.activeSources;
   return {
     ...ownProps,
-    sources,
+    sources: currentSources.get(channelNumber),
+    active: channelActiveSource.get(channelNumber) === 'live',
     areas
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {LiveSelectorActions: bindActionCreators(liveSelectorActions, dispatch)};
+  return {
+    LiveSelectorActions: bindActionCreators(liveSelectorActions, dispatch),
+    ActiveSourcesActions: bindActionCreators(activeSourcesActions, dispatch),
+    HLSPlayersActions: bindActionCreators(hlsPlayersActions, dispatch)
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LiveSelector);
