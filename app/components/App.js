@@ -44,7 +44,6 @@ function App(props) {
   }
 
   React.useEffect(() => {
-      // get saved clip list
       const Store = require('electron-store');
       const {remote} = require('electron');
       const clipStore = new Store({
@@ -59,7 +58,7 @@ function App(props) {
           setBaseClips({baseClips});
       })
   },[])
-  
+
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" height="1">

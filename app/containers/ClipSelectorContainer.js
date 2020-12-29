@@ -15,7 +15,8 @@ function mapStateToProps(state, ownProps) {
   const {channelActiveSource} = state.activeSources;
   const active = channelActiveSource.get(channelNumber) === 'clip';
   const disabled = !active;
-  const savedClips = baseClips.get(channelNumber).filter(() => {return true})
+  // const savedClips = baseClips.get(channelNumber).filter(() => {return true})
+  const savedClips = baseClips.get(channelNumber);
   const withinHour = withinHours.get(channelNumber)
 
   return {
