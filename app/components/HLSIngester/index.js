@@ -32,11 +32,15 @@ function HLSIngest(props) {
             // bgcolor="#2d2f3b"
         >
             <Duration channelNumber={channelNumber} bgColors={bgColors}></Duration>
-            <BorderedBox height="100px" display="flex" alignItems="center" bgcolor="#232738">
+            <BorderedBox height="110px" display="flex" alignItems="center" bgcolor="#232738">
                 <Box display="flex" flexDirection="column" padding="5px">
                     <Typography variant="body1">Source</Typography>
-                    <LiveSelectorContainer channelNumber={channelNumber}></LiveSelectorContainer>
-                    <ClipSelectorContainer channelNumber={channelNumber}></ClipSelectorContainer>
+                    <Box mt="2px">
+                        <LiveSelectorContainer channelNumber={channelNumber}></LiveSelectorContainer>
+                    </Box>
+                    <Box mt="5px" mb="2px">
+                        <ClipSelectorContainer channelNumber={channelNumber}></ClipSelectorContainer>
+                    </Box>
                 </Box>
                 <BasicButton 
                     channelNumber={channelNumber}

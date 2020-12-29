@@ -60,6 +60,7 @@ function LiveSelector(props) {
                     disabled={disabled}
                     placeholder="AREA"
                     options={areas}
+                    fontSize="10px"
                     onChange={handleChangeArea}
                 ></Autocomplete>
             </Box>

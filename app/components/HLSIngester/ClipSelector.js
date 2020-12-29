@@ -58,6 +58,7 @@ function ClipSelector(props) {
                     disabled={disabled}
                     placeholder="HOUR"
                     options={hours}
+                    fontSize="10px"
                     onChange={handleChangeHour}
                 ></Autocomplete>
             </Box>
