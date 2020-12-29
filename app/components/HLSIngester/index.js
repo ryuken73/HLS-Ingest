@@ -2,14 +2,15 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import LiveSelectorContainer from '../../containers/LiveSelectorContainer';  
-import ClipSelector from './ClipSelector';  
+import ClipSelectorContainer from '../../containers/ClipSelectorContainer';  
+// import ClipSelector from './ClipSelector';  
 import BorderedBox from '../template/BorderedBox';
 import BorderedList from '../template/BorderedList';
 import {BasicButton} from '../template/basicComponents';
 import {SmallButton} from '../template/smallComponents';
 import Duration from './Duration';
-// import HLSPlayerContainer from '../../containers/HLSPlayerContainer';
-import HLSPlayer from './HLSPlayer';
+import HLSPlayerContainer from '../../containers/HLSPlayerContainer';
+// import HLSPlayer from './HLSPlayer';
 
 const bgColors = {
     // 'starting': 'maroon',
@@ -35,7 +36,7 @@ function HLSIngest(props) {
                 <Box display="flex" flexDirection="column" padding="5px">
                     <Typography variant="body1">Source</Typography>
                     <LiveSelectorContainer channelNumber={channelNumber}></LiveSelectorContainer>
-                    <ClipSelector channelNumber={channelNumber}></ClipSelector>
+                    <ClipSelectorContainer channelNumber={channelNumber}></ClipSelectorContainer>
                 </Box>
                 <BasicButton 
                     channelNumber={channelNumber}
@@ -47,7 +48,7 @@ function HLSIngest(props) {
                 >INGEST</BasicButton>
             </BorderedBox>
             <BorderedBox>
-                <HLSPlayer channelNumber={channelNumber}></HLSPlayer>
+                <HLSPlayerContainer channelNumber={channelNumber}></HLSPlayerContainer>
             </BorderedBox>
         </BorderedBox>
     )

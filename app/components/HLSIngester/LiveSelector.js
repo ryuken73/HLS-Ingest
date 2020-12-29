@@ -2,23 +2,41 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Radio from '@material-ui/core/Radio';
 import { Typography } from '@material-ui/core';
-import Autocomplete from '../template/AutoComplete'
+import Autocomplete from '../template/AutoComplete';
+const utils = require('../../utils');
+const {debounce} = utils.fp;
 
 function LiveSelector(props) {
     const {
+        channelNumber,
         areas=[],
-        sources=[]
+        sources=[],
+        active=true
     } = props;
+    
     const {
-        limitSources
-    } = props.LiveSelectorActions
-    const handleChange = () => {};
+        limitSources=()=>{},
+        setCurrentSource=()=>{}
+    } = props.LiveSelectorActions;
+
+    const deboucedSetCurrentSource = debounce(300, setCurrentSource);
+    const {changePlayerSource=()=>{}} = props.HLSPlayersActions;
+    const debouncedChangePlayerSource = debounce(300, changePlayerSource);
+    const {setChannelActiveSource=()=>{}} = props.ActiveSourcesActions;
+
+    
+    const handleChange = (event) => {
+        setChannelActiveSource({channelNumber, sourceFrom: event.target.value});
+    };    
     const handleChangeArea = (event, value) => {
-        limitSources(value)
-    }
+        limitSources(channelNumber, value)
+    };
     const setLiveSource = (event, value) => {
-        console.log(value)
-    }
+        // console.log(value)
+        deboucedSetCurrentSource({channelNumber, channelSource:value});
+        debouncedChangePlayerSource({channelNumber, source:value, sourceType:'live'});
+    };
+
     return (
         <Box
             display="flex"
@@ -26,9 +44,9 @@ function LiveSelector(props) {
         >
             <Box display="flex" alignItems="center" width="80px">
                 <Radio
-                    checked={true}
+                    checked={active}
                     onChange={handleChange}
-                    value="a"
+                    value="live"
                     name="radio-button-demo"
                     inputProps={{ 'aria-label': 'A' }}
                     size="small"
@@ -47,7 +65,8 @@ function LiveSelector(props) {
                 <Autocomplete
                     placeholder="cctv"
                     options={sources}
-                    onChange={setLiveSource}
+                    // onChange={setLiveSource}
+                    onHighlightChange={setLiveSource}
                     width={300}
                 ></Autocomplete>
             </Box>

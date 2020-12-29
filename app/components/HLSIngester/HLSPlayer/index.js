@@ -17,8 +17,6 @@ const HLSPlayer = (props) => {
     const {
         channelNumber=1,
         channelName='preview',
-        width=600, 
-        height=360, 
         controls=false, 
         autoplay=true, 
         bigPlayButton=false, 
@@ -29,6 +27,10 @@ const HLSPlayer = (props) => {
         restorePlaybackRate=true,
         LONG_BUFFERING_MS_SECONDS=3000
     } = props;
+    
+    // todo: move below in config file
+    const width=600;
+    const height=340; 
 
     const {
         setPlayer=()=>{},

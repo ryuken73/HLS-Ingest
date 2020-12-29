@@ -62,7 +62,6 @@ class VideoPlayer extends Component {
         playerOptions.liveui = props.liveui;
         const hidePlaybackRates = props.hidePlaybackRates || props.hideControls.includes('playbackrates');
         if (!hidePlaybackRates) playerOptions.playbackRates = props.playbackRates;
-        // console.log(playerOptions)
         return playerOptions;
     }
 

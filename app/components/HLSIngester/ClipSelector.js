@@ -2,10 +2,40 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Radio from '@material-ui/core/Radio';
 import { Typography } from '@material-ui/core';
-import Autocomplete from '../template/AutoComplete'
+import Autocomplete from '../template/AutoComplete';
+const utils = require('../../utils');
+const {debounce} = utils.fp;
 
-function ClipSelector() {
-    const handleChange = () => {};
+function ClipSelector(props) {
+    const {
+        channelNumber='x',
+        hours=[],
+        savedClips=[],
+        active=true,
+        selectedHour=6
+    } = props;
+
+    const {
+        limitClips=()=>{},
+        setCurrentClip=()=>{}
+    } = props.ClipSelectorActions;
+
+    const deboucedSetCurrentClip = debounce(300, setCurrentClip);
+    const {changePlayerSource=()=>{}} = props.HLSPlayersActions;
+    const debouncedChangePlayerSource = debounce(300, changePlayerSource);
+    const {setChannelActiveSource=()=>{}} = props.ActiveSourcesActions;
+
+    const handleChange = (event) => {
+        setChannelActiveSource({channelNumber, sourceFrom: event.target.value});
+    };
+    const handleChangeHour = (event, value) => {
+        limitClips(channelNumber, value)
+    }
+    const setClipSource = (event, value) => {
+        // setCurrentClip({channelNumber, clipInfo: value});
+        deboucedSetCurrentClip({channelNumber, clipInfo: value});
+        debouncedChangePlayerSource({channelNumber, source:value, sourceType:'clip'});
+    }
     return (
         <Box
             display="flex"
@@ -13,9 +43,9 @@ function ClipSelector() {
         >
             <Box display="flex" alignItems="center" width="80px">
                 <Radio
-                    checked={true}
+                    checked={active}
                     onChange={handleChange}
-                    value="a"
+                    value="clip"
                     name="radio-button-demo"
                     inputProps={{ 'aria-label': 'A' }}
                     size="small"
@@ -25,12 +55,18 @@ function ClipSelector() {
             <Box ml="5px">
                 <Autocomplete
                     placeholder="hour"
+                    options={hours}
+                    onChange={handleChangeHour}
                 ></Autocomplete>
             </Box>
             <Box ml="2px">
                 <Autocomplete
                     placeholder="clip"
+                    options={savedClips}
+                    // onChange={setClipSource}
+                    onHighlightChange={setClipSource}
                     width={300}
+                    fontSize="10px"
                 ></Autocomplete>
             </Box>
         </Box>
