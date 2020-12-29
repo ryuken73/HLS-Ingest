@@ -1,10 +1,9 @@
 import {createAction, handleActions} from 'redux-actions';
 // import {logInfo, logError, logFail} from './messagePanel';
 const cctvFromConfig = require('../lib/getCCTVList');
-const {getCombinedConfig} = require('../lib/getConfig');
+const {getDefaultConfig} = require('../lib/getConfig');
 const sources = cctvFromConfig();
-const config = getCombinedConfig({storeName:'optionStore', electronPath:'home'});
-
+const config = getDefaultConfig();
 const {
     NUMBER_OF_CHANNELS,
     CHANNEL_PREFIX,
@@ -12,39 +11,25 @@ const {
     LONG_BUFFERING_MS_SECONDS=3000
 } = config;
 
-const mkOverlayContent = url => {
-    const source = sources.find(source => source.url === url)
-    if(source !== undefined){
-        const {title} = source
-        const element = document.createElement('div');
-        element.innerHTML = title;
-        element.style = "color:black;font-weight:bold";
-        return element;
+const mkOverlayContent = (url, title) => {
+    
+    if(title === undefined){
+        const source = sources.find(source => source.url === url);
+        title = source === undefined ? 'None' : source.title; 
     }
-    return false;
+    const element = document.createElement('div');
+    element.innerHTML = title;
+    element.style = "color:black;font-weight:bold";
+    return element;
 }
 
+// initialize players
 const players = new Map();
-const {remote} = require('electron');
-// below is not singleton
-// const electronUtil = require('../lib/electronUtil');
-// const sourceStore = electronUtil.createElectronStore({
-//     name:'sourceStore',
-//     cwd:remote.app.getPath('home')
-// });
-const Store = require('electron-store');
-const sourceStore = new Store({
-    name:'sourceStore',
-    cwd:remote.app.getPath('home')
-})
-
 for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
-    // const source = sources[channelNumber-1] || {};
-    const source = sourceStore.get(channelNumber.toString()) || sources[channelNumber-1]
-    const {title="없음", url=""} = source;
+    const url = "";
     const hlsPlayer = {
         ...DEFAULT_PLAYER_PROPS,
-        source,
+        // source,
         channelName: `${CHANNEL_PREFIX}${channelNumber}`,
         overlayContent: mkOverlayContent(url)
     }
@@ -63,19 +48,13 @@ export const setPlayerSource = createAction(SET_PLAYER_SOURCE);
 export const refreshPlayer = createAction(REFRESH_PLAYER);
 
 // redux thunk
-export const setSourceNSave = ({channelNumber, url}) => (dispatch, getState) => {
+export const changePlayerSource = ({channelNumber, source, sourceType}) => (dispatch, getState) => {
     const state = getState();
-    const {sourceStore} = state.app;
-    const hlsPlayer = {...state.hlsPlayers.players.get(channelNumber)};
-
-    const sourceNumber = sources.findIndex(source => source.url === url);
-    const title = sourceNumber !== -1 ? sources[sourceNumber].title : hlsPlayer.source.title;
-    
-    sourceStore.set(channelNumber, {
-        title, 
-        url
-    })
-    dispatch(setPlayerSource({channelNumber, url}))
+    const activeSource = state.activeSources.channelActiveSource.get(channelNumber);
+    if(activeSource !== sourceType){
+        return;
+    } 
+    dispatch(setPlayerSource({channelNumber, source}))
 }
 
 const initialState = {
@@ -101,16 +80,17 @@ export default handleActions({
     },
     [SET_PLAYER_SOURCE]: (state, action) => {
         // console.log('%%%%%%%%%%%%%%%%', action.payload);
-        const {channelNumber, url} = action.payload;
-        const overlayContent = mkOverlayContent(url);
+        const {channelNumber, source} = action.payload;
+        const {url, title} = source;
+        const overlayContent = mkOverlayContent(url, title);
 
-        const sourceNumber = sources.findIndex(source => source.url === url);
         const hlsPlayer = {...state.players.get(channelNumber)};
+
         // to make state change, use spread operator on source;
-        const source = {...hlsPlayer.source};
-        source.url = url;
-        source.title = sourceNumber !== -1 ? sources[sourceNumber].title : hlsPlayer.source.title;
-        hlsPlayer.source = source;
+        const newSource = {...hlsPlayer.source};
+        newSource.url = url;
+        newSource.title = title;
+        hlsPlayer.source = newSource;
         if(overlayContent) hlsPlayer.overlayContent = overlayContent;
 
         const players = new Map(state.players);
