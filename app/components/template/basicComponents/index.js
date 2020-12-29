@@ -62,6 +62,7 @@ const BasicTextField = styled(TextField)`
         background: ${props => props.bgcolor || "#191d2e"};
         input {
             color: ${props => props.color || "white"};
+            font-size: ${props => props.fontSize || "12px"};
         }
     }
     .MuiFormLabel-root {

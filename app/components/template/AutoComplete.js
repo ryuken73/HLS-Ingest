@@ -10,18 +10,24 @@ export default function Highlights(props) {
       placeholder="type text",
       width=100,
       options=[],
+      fontSize="12px",
+      autoComplete=true,
       onChange=(event, newValue) => {
         console.log(newValue)
-      }
+      },
+      onHighlightChange=()=>{}
   } = props;
 
   return (
     <Autocomplete
       id="highlights-demo"
+      size="small"
       style={{ width: width }}
+      autoComplete={autoComplete}
       options={options}
       getOptionLabel={(option) => option.title}
       onChange={onChange}
+      onHighlightChange={onHighlightChange}
       renderInput={(params) => (
         <BasicTextField 
             {...params} 
@@ -29,6 +35,7 @@ export default function Highlights(props) {
             label={placeholder} 
             variant="outlined" 
             margin="small" 
+            fontSize={fontSize}
         />
       )}
       renderOption={(option, { inputValue }) => {
