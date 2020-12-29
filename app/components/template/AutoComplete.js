@@ -20,6 +20,7 @@ export default function Highlights(props) {
 
   return (
     <Autocomplete
+      {...props}
       id="highlights-demo"
       size="small"
       style={{ width: width }}

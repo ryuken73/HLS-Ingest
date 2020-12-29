@@ -8,18 +8,20 @@ import * as clipSelectorActions from '../modules/clipSelector';
 import * as activeSourcesActions from '../modules/activeSources';
 import * as hlsPlayersActions from '../modules/hlsPlayers';
 
-
-
 function mapStateToProps(state, ownProps) {
   // console.log('mapStateToProps:',state) 
   const {channelNumber} = ownProps;
   const {hours, currentClips, selectedHour} = state.clipSelector;
   const {channelActiveSource} = state.activeSources;
+  const active = channelActiveSource.get(channelNumber) === 'clip';
+  const disabled = !active;
+
   return {
     ...ownProps,
     hours,
     savedClips: currentClips.get(channelNumber),
-    active: channelActiveSource.get(channelNumber) === 'clip',
+    active,
+    disabled,
     selectedHour
   }
 }

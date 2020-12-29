@@ -8,16 +8,18 @@ import * as liveSelectorActions from '../modules/liveSelector';
 import * as activeSourcesActions from '../modules/activeSources';
 import * as hlsPlayersActions from '../modules/hlsPlayers';
 
-
 function mapStateToProps(state, ownProps) {
   // console.log('mapStateToProps:',state) 
   const {channelNumber} = ownProps;
   const {currentSources, areas} = state.liveSelector;
   const {channelActiveSource} = state.activeSources;
+  const active = channelActiveSource.get(channelNumber) === 'live';
+  const disabled = !active;
   return {
     ...ownProps,
     sources: currentSources.get(channelNumber),
-    active: channelActiveSource.get(channelNumber) === 'live',
+    active,
+    disabled, 
     areas
   }
 }

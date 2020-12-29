@@ -11,7 +11,8 @@ function LiveSelector(props) {
         channelNumber,
         areas=[],
         sources=[],
-        active=true
+        active=true,
+        disabled=false
     } = props;
     
     const {
@@ -56,18 +57,21 @@ function LiveSelector(props) {
 
             <Box ml="5px">
                 <Autocomplete
-                    placeholder="area"
+                    disabled={disabled}
+                    placeholder="AREA"
                     options={areas}
                     onChange={handleChangeArea}
                 ></Autocomplete>
             </Box>
             <Box ml="2px">
                 <Autocomplete
-                    placeholder="cctv"
+                    disabled={disabled}
+                    placeholder="CCTV"
                     options={sources}
                     // onChange={setLiveSource}
                     onHighlightChange={setLiveSource}
                     width={300}
+                    fontSize="10px"
                 ></Autocomplete>
             </Box>
         </Box>
