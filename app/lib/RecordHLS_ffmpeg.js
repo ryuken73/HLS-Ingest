@@ -1,7 +1,4 @@
 const EventEmitter = require('events');
-const utils = require('../utils');
-const fs = require('fs');
-const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const log = require('electron-log');
 
@@ -9,12 +6,6 @@ const {getDefaultConfig} = require('./getConfig');
 const config = getDefaultConfig();
 const inputOptions = config.FFMPEG_OPTIONS.INPUT;
 const outputOptions = config.FFMPEG_OPTIONS.OUTPUT;
-
-// const hlsInputOptions = ['-dts_delta_threshold', 0] // fornt part of clip not playable
-// const hlsInputOptions = ['-dts_delta_threshold', 10];
-// const mp4Options = ['-acodec', 'copy', '-vcodec', 'copy'];;
-// const hlsOptions = ['-f','hls', '-hls_time', 4, '-hls_list_size','0','-g',25,'-sc_threshold',0,'-preset','ultrafast','-vsync',2];
-// const hlsOptions = ['-f','hls','-hls_time','8','-hls_list_size','10','-hls_flags','delete_segments','-g',25,'-sc_threshold',0,'-preset','ultrafast','-vsync',2];
 
 const sameAsBefore = initialValue => {
     let previousValue = initialValue;
@@ -51,7 +42,6 @@ class RecoderHLS extends EventEmitter {
             src='', 
             target='target.mp4', 
             enablePlayback=false, 
-            localm3u8='./temp/stream.m3u8',
             ffmpegBinary='./ffmpeg.exe',
             renameDoneFile=false
         } = options;
@@ -60,9 +50,9 @@ class RecoderHLS extends EventEmitter {
         this._target = target;
         this._createTime = Date.now();
         this._enablePlayback = enablePlayback;
-        this._localm3u8 = localm3u8;
         this._ffmpegBinary = ffmpegBinary;
         this._renameDoneFile = renameDoneFile;
+
         ffmpeg.setFfmpegPath(this._ffmpegBinary);
         this.log = (() => {
             return {
@@ -124,7 +114,6 @@ class RecoderHLS extends EventEmitter {
     set createTime(date) { this._createTime = date }
     set rStream(stream) { this._rStream = stream }
     set wStream(stream) { this._wStream = stream }
-    set localm3u8(m3u8) { this._localm3u8 = m3u8 }
     set bytesRecorded(bytes) { this._bytesRecorded = bytes }
     set duration(duration) { 
         this._durationRecorded = duration;
@@ -137,16 +126,11 @@ class RecoderHLS extends EventEmitter {
     onFFMPEGEnd = (error) => {
         this.log.info(`ffmpeg ends! : ${this.target}`);
         if(error){
-            // this.initialize();
-            // do not manually initialize
-            // send error message to ChannelControl
             this.log.error(`ended abnormally: startime =${this.startTime}:duration=${this.duration}`);
             this.initialize();            
             this.emit('error', error);
             this.emit('end', this.target, this.startTime, this.duration)
             return
-            // this.emit('end', this.target, this.startTime, this.duration)
-            // return;
         }
         this.log.info(`ended ${this.startTime}:${this.duration}`)
         this.emit('end', this.target, this.startTime, this.duration)
@@ -163,7 +147,6 @@ class RecoderHLS extends EventEmitter {
         this.emit('start', cmd);
     }
     progressHandler = event => {
-        // this.bytesRecorded = this.wStream.bytesWritten;
         this.duration = event.timemark;
         this.log.debug(`duration: ${this.duration}`);
         const CRITICAL_SUCCESSIVE_OCCUR_COUNT = 5;
@@ -183,9 +166,8 @@ class RecoderHLS extends EventEmitter {
         }
         this.isPreparing = true;
         this.log.info(`start encoding.... ${this.src}`);
-        // this.enablePlayback && this.command.output(this._localm3u8).outputOptions(hlsOptions);
         try {
-            // file path contains back slash, ffmpeg fails. replace!
+            // if file path contains back slash, ffmpeg fails. replace!
             const srcNormalized = this._src.replace(/\\/g, '/');
             this.command = ffmpeg(srcNormalized);
             if(typeof(this._target) === 'string'){
@@ -219,11 +201,6 @@ class RecoderHLS extends EventEmitter {
             this.log.warn(`start recording first!. there may be premature ending of ffmpeg.`)
             this.emit('end', this.target, this.startTime, this.duration)
             this.initialize();
-            // throw new Error('start recording first!.')  
-            // "throw new Error" comment, because ffmpeg ended already case can be occurred and can make some trouble.
-            // if that case happened, manual(or scheduled) stop can't be processed forever if throws error, 
-            // because isRecording is already false...
-            // initialization already processed, don't need do something. just return;
             return;
         }
         this.log.info(`stopping ffmpeg...`);
@@ -240,7 +217,6 @@ const createHLSRecoder = options => {
         src= url,
         target='d:/temp/cctv_kbs_ffmpeg.mp4', 
         enablePlayack= true, 
-        localm3u8= 'd:/temp/cctv/stream.m3u8',
         ffmpegBinary= 'd:/temp/cctv/ffmpeg.exe',
         renameDoneFile= false
     } = options;
