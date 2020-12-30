@@ -17,7 +17,7 @@ const bgColors = {
     'starting': '#540101',
     'started': 'maroon',
     'stopping': '#540101',
-    'stopped': 'black'
+    'stopped': '#191d2e'
 }
 
 function HLSIngest(props) {
@@ -46,6 +46,13 @@ function HLSIngest(props) {
         stopRecording(channelNumber);
     }
 
+    const ButtonText = {
+        "starting": "Starting..",
+        "started": "Stop",
+        "stopping": "Stopping..",
+        "stopped": "Ingest"
+    }
+
 
     return (
         <BorderedBox
@@ -70,12 +77,14 @@ function HLSIngest(props) {
                 <BasicButton 
                     channelNumber={channelNumber}
                     color="secondary" 
+                    bgcolor={bgColors[recorderStatus]}
                     variant={"contained"} 
-                    bgcolor="#191d2e" 
+                    // bgcolor="#191d2e" 
                     height="90%" 
                     width="80%"
+                    disabled={inTransition}
                     onClick={recorderStatus==="started" ? stopRecordChannel : startRecordChannel}
-                >INGEST</BasicButton>
+                >{ButtonText[recorderStatus]}</BasicButton>
             </BorderedBox>
             <BorderedBox>
                 <HLSPlayerContainer channelNumber={channelNumber}></HLSPlayerContainer>
