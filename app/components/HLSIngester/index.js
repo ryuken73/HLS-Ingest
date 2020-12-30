@@ -21,7 +21,32 @@ const bgColors = {
 }
 
 function HLSIngest(props) {
+    console.log('$$$',props)
     const {channelNumber} = props;
+    const {
+        inTransition=false,
+        recorderStatus="stopped",        
+    } = props;
+
+    const {
+        startRecording=()=>{},
+        stopRecording=()=>{},
+        createRecorder=()=>{}
+    } = props.HLSRecorderActions;
+
+    React.useEffect(() => {
+        createRecorder(channelNumber);
+    },[])
+
+    const startRecordChannel = event => {
+        startRecording(channelNumber);
+    }
+
+    const stopRecordChannel = event => {
+        stopRecording(channelNumber);
+    }
+
+
     return (
         <BorderedBox
             bgcolor="#232738"
@@ -49,6 +74,7 @@ function HLSIngest(props) {
                     bgcolor="#191d2e" 
                     height="90%" 
                     width="80%"
+                    onClick={recorderStatus==="started" ? stopRecordChannel : startRecordChannel}
                 >INGEST</BasicButton>
             </BorderedBox>
             <BorderedBox>

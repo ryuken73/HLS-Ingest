@@ -5,10 +5,15 @@ const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const log = require('electron-log');
 
+const {getDefaultConfig} = require('./getConfig'); 
+const config = getDefaultConfig();
+const inputOptions = config.FFMPEG_OPTIONS.INPUT;
+const outputOptions = config.FFMPEG_OPTIONS.OUTPUT;
+
 // const hlsInputOptions = ['-dts_delta_threshold', 0] // fornt part of clip not playable
-const hlsInputOptions = ['-dts_delta_threshold', 10];
-const mp4Options = ['-acodec', 'copy', '-vcodec', 'copy'];;
-const hlsOptions = ['-f','hls', '-hls_time', 4, '-hls_list_size','0','-g',25,'-sc_threshold',0,'-preset','ultrafast','-vsync',2];
+// const hlsInputOptions = ['-dts_delta_threshold', 10];
+// const mp4Options = ['-acodec', 'copy', '-vcodec', 'copy'];;
+// const hlsOptions = ['-f','hls', '-hls_time', 4, '-hls_list_size','0','-g',25,'-sc_threshold',0,'-preset','ultrafast','-vsync',2];
 // const hlsOptions = ['-f','hls','-hls_time','8','-hls_list_size','10','-hls_flags','delete_segments','-g',25,'-sc_threshold',0,'-preset','ultrafast','-vsync',2];
 
 const sameAsBefore = initialValue => {
@@ -178,10 +183,17 @@ class RecoderHLS extends EventEmitter {
         }
         this.isPreparing = true;
         this.log.info(`start encoding.... ${this.src}`);
-        // this.command = ffmpeg(this._src).inputOptions(hlsInputOptions).output(this.target).outputOptions(mp4Options);
         // this.enablePlayback && this.command.output(this._localm3u8).outputOptions(hlsOptions);
         try {
-            this.command = ffmpeg(this._src).inputOptions(hlsInputOptions).output(this._localm3u8).outputOptions(hlsOptions);
+            // if adding ffmpeg's inputOptions(""), command.run() makes error.
+            this.command = ffmpeg(this._src);
+            if(typeof(this._target) === 'string'){
+                this.command = this.command.output(this._target).outputOptions(outputOptions);
+            } else {
+                for(let i=0; i < this._target.length ;i++){
+                    this.command = this.command.output(this._target[i]).outputOptions(outputOptions);
+                }
+            }
         } catch (error) {
             this.log.error(error.message)
         }

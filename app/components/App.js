@@ -2,7 +2,8 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import HeaderContainer from '../containers/HeaderContainer';
-import HLSIngest from './HLSIngester';
+// import HLSIngest from './HLSIngester';
+import HLSIngesterContainer from '../containers/HLSIngesterContainer';
 import MessageContainer from './MessagePanel';
 
 const theme = createMuiTheme({
@@ -63,7 +64,7 @@ function App(props) {
     <ThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" height="1">
         <Box display="flex">
-          {channels.map(channelNumber => (<HLSIngest key={channelNumber} channelNumber={channelNumber}></HLSIngest>))}
+          {channels.map(channelNumber => (<HLSIngesterContainer key={channelNumber} channelNumber={channelNumber}></HLSIngesterContainer>))}
         </Box>
         <MessageContainer mt="auto"></MessageContainer> 
       </Box>
