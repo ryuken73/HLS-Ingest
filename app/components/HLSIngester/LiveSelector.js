@@ -38,6 +38,8 @@ function LiveSelector(props) {
         debouncedChangePlayerSource({channelNumber, source:value, sourceType:'live'});
     };
 
+    const AutoCompleteColor = disabled ? "darkslategrey" : "white";
+
     return (
         <Box
             display="flex"
@@ -62,6 +64,7 @@ function LiveSelector(props) {
                     options={areas}
                     fontSize="10px"
                     onChange={handleChangeArea}
+                    color={AutoCompleteColor}
                 ></Autocomplete>
             </Box>
             <Box ml="2px">
@@ -73,6 +76,7 @@ function LiveSelector(props) {
                     onHighlightChange={setLiveSource}
                     width={300}
                     fontSize="10px"
+                    color={AutoCompleteColor}
                 ></Autocomplete>
             </Box>
         </Box>

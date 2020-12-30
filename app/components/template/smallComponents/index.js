@@ -30,6 +30,7 @@ const SmallButton  = styled(Button)`
     background: ${props => props.bgcolor || defaultBgColor};
     height: ${props => props.height};
     min-width: ${props => props.minwidth};
+    width: ${props => props.width};
     &:disabled {
         color: darkgreen;
     }

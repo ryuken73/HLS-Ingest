@@ -39,6 +39,9 @@ function ClipSelector(props) {
         deboucedSetCurrentClip({channelNumber, clipInfo: value});
         debouncedChangePlayerSource({channelNumber, source:value, sourceType:'clip'});
     }
+
+    const AutoCompleteColor = disabled ? "darkslategrey" : "white";
+
     return (
         <Box
             display="flex"
@@ -62,6 +65,7 @@ function ClipSelector(props) {
                     options={hours}
                     fontSize="10px"
                     onChange={handleChangeHour}
+                    color={AutoCompleteColor}
                 ></Autocomplete>
             </Box>
             <Box ml="2px">
@@ -71,8 +75,9 @@ function ClipSelector(props) {
                     options={savedClips}
                     // onChange={setClipSource}
                     onHighlightChange={setClipSource}
-                    width={300}
+                    width={"300px"}
                     fontSize="10px"
+                    color={AutoCompleteColor}
                 ></Autocomplete>
             </Box>
         </Box>

@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Duration from '../components/HLSRecorder/Duration';
+import Duration from '../components/HLSIngester/Duration';
 import * as hlsRecorderActions from '../modules/hlsRecorders';
 
 
@@ -13,12 +13,7 @@ function mapStateToProps(state, ownProps) {
     ...ownProps,
     channelName: hlsRecorder.channelName,
     duration: hlsRecorder.duration,
-    channelDirectory: hlsRecorder.channelDirectory,
-    url: hlsRecorder.url,
-    recorder: hlsRecorder.recorder,
     inTransition: hlsRecorder.inTransition,
-    scheduleFunction: hlsRecorder.scheduleFunction,
-    autoStartSchedule: hlsRecorder.autoStartSchedule,
     recorderStatus: hlsRecorder.recorderStatus,
   }
 }

@@ -15,7 +15,8 @@ export default function Highlights(props) {
       onChange=(event, newValue) => {
         console.log(newValue)
       },
-      onHighlightChange=()=>{}
+      onHighlightChange=()=>{},
+      color="white"
   } = props;
 
   return (
@@ -37,6 +38,7 @@ export default function Highlights(props) {
             variant="outlined" 
             margin="small" 
             fontSize={fontSize}
+            color={color}
         />
       )}
       renderOption={(option, { inputValue }) => {
