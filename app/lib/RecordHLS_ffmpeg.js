@@ -185,8 +185,9 @@ class RecoderHLS extends EventEmitter {
         this.log.info(`start encoding.... ${this.src}`);
         // this.enablePlayback && this.command.output(this._localm3u8).outputOptions(hlsOptions);
         try {
-            // if adding ffmpeg's inputOptions(""), command.run() makes error.
-            this.command = ffmpeg(this._src);
+            // file path contains back slash, ffmpeg fails. replace!
+            const srcNormalized = this._src.replace(/\\/g, '/');
+            this.command = ffmpeg(srcNormalized);
             if(typeof(this._target) === 'string'){
                 this.command = this.command.output(this._target).outputOptions(outputOptions);
             } else {

@@ -68,7 +68,6 @@ const createLogger = channelName => {
 import HLSRecorder from '../lib/RecordHLS_ffmpeg';
 import {getAbsolutePath} from '../lib/electronUtil';
 import SelectInput from '@material-ui/core/Select/SelectInput';
-import { SourceNode } from 'C:/Users/user/AppData/Local/Microsoft/TypeScript/3.3/node_modules/source-map/source-map';
 
 const getChanneler = (state, channelNumber) => {
     const {recorders} = state.hlsRecorders;
