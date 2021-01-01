@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import HeaderContainer from '../containers/HeaderContainer';
+// import HeaderContainer from '../containers/HeaderContainer';
 // import HLSIngest from './HLSIngester';
 import HLSIngesterContainer from '../containers/HLSIngesterContainer';
 import MessageContainer from './MessagePanel';
