@@ -45,7 +45,7 @@
   },
   "FFPLAY_OFFSET": {
     "1": {"OFFSET_TOP": 250, "OFFSET_LEFT": 15},
-    "2": {"OFFSET_TOP": 250, "OFFSET_LEFT": 15}
+    "2": {"OFFSET_TOP": 250, "OFFSET_LEFT": 650}
   },
   "FFPLAY_SIZE": {
     "WIDTH": 617,
