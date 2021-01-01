@@ -1,8 +1,6 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-// import HeaderContainer from '../containers/HeaderContainer';
-// import HLSIngest from './HLSIngester';
 import HLSIngesterContainer from '../containers/HLSIngesterContainer';
 import MessageContainer from './MessagePanel';
 
@@ -23,9 +21,6 @@ const config = getDefaultConfig();
 const {AUTO_UPDATE_CLIP=true} = config;
 
 function App(props) { 
-  const [confirmOpen, setConfirmOpen] = React.useState(false);
-  const [dialogTitle, setDialogTitle] = React.useState('Really Reload?');
-  const [dialogText, setDialogText] = React.useState('Reload will stop current recordings and schedules. OK?');
   const {channels=[1,2]} = props;
   const {setBaseClips=()=>{}} = props.ClipSelectorActions;
 

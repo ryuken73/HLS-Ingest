@@ -3,15 +3,12 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import LiveSelectorContainer from '../../containers/LiveSelectorContainer';  
 import ClipSelectorContainer from '../../containers/ClipSelectorContainer';  
-// import ClipSelector from './ClipSelector';  
 import BorderedBox from '../template/BorderedBox';
 import BorderedList from '../template/BorderedList';
 import {BasicButton} from '../template/basicComponents';
 import {SmallButton} from '../template/smallComponents';
 import DurationContainer from '../../containers/DurationContainer';
-// import Duration from './Duration';
 import HLSPlayerContainer from '../../containers/HLSPlayerContainer';
-// import HLSPlayer from './HLSPlayer';
 
 const {getDefaultConfig} = require('../../lib/getConfig');
 const config = getDefaultConfig();
