@@ -4,12 +4,13 @@ const {getDefaultConfig} = require('../lib/getConfig');
 const config = getDefaultConfig();
 
 const {
-    NUMBER_OF_CHANNELS
+    NUMBER_OF_CHANNELS,
+    DEFAULT_SOURCE
 } = config;
 
 const channelActiveSource = new Map();
 for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
-    channelActiveSource.set(channelNumber, 'clip');
+    channelActiveSource.set(channelNumber, DEFAULT_SOURCE);
 }
 
 // action types

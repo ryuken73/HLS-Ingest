@@ -13,6 +13,11 @@ import DurationContainer from '../../containers/DurationContainer';
 import HLSPlayerContainer from '../../containers/HLSPlayerContainer';
 // import HLSPlayer from './HLSPlayer';
 
+const {getDefaultConfig} = require('../../lib/getConfig');
+const config = getDefaultConfig();
+
+const {remote} = require('electron');
+
 const bgColors = {
     // 'starting': 'maroon',
     'starting': '#540101',
@@ -35,16 +40,41 @@ function HLSIngest(props) {
         createRecorder=()=>{}
     } = props.HLSRecorderActions;
 
+    const {
+        forkPlaybackProcess=()=>{},
+        destroyPlaybackProcess=()=>{}
+    } = props.PlaybackActions;
+
     React.useEffect(() => {
         createRecorder(channelNumber);
     },[])
 
-    const startRecordChannel = event => {
-        startRecording(channelNumber);
+    const {OFFSET_TOP, OFFSET_LEFT} = config.FFPLAY_OFFSET[channelNumber.toString()];
+    const {WIDTH, HEIGHT} = config.FFPLAY_SIZE;
+
+    const startRecordChannel = async event => {
+        try {
+            const mainWindow = remote.getCurrentWindow();
+            mainWindow.setMovable(false);
+            const [left, top] = mainWindow.getPosition();
+            
+            await startRecording(channelNumber);
+            // const forkArgs = ['-left', left, '-top', top+OFFSET_TOP, '-alwaysontop', '-noborder', '-i', 'udp://127.0.0.1:8881'];
+            const forkArgs = ['-x', WIDTH, '-y', HEIGHT, '-left', left+OFFSET_LEFT, '-top', top+OFFSET_TOP, '-alwaysontop'];
+            forkPlaybackProcess({channelNumber, forkArgs});
+        } catch (error) {
+            console.error(error);
+            const mainWindow = remote.getCurrentWindow();
+            mainWindow.setMovable(true);
+        }
+
     }
 
     const stopRecordChannel = event => {
+        const mainWindow = remote.getCurrentWindow();
+        mainWindow.setMovable(true)
         stopRecording(channelNumber);
+        destroyPlaybackProcess({channelNumber});
     }
 
     const ButtonText = {
@@ -88,7 +118,7 @@ function HLSIngest(props) {
                 >{ButtonText[recorderStatus]}</BasicButton>
             </BorderedBox>
             <BorderedBox 
-                display="flex"
+                display={recorderStatus === 'stopped' ? "flex" : "none"}
                 bgcolor="black"
                 alignItems="center"
                 justifyContent="center"

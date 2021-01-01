@@ -2,12 +2,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import HLSIngester from '../components/HLSIngester';
 import * as hlsRecorderActions from '../modules/hlsRecorders';
+import * as playbackActions from '../modules/playback';
 
 
 function mapStateToProps(state, ownProps) {
   // console.log('mapStateToProps:',state)
   const {channelNumber} = ownProps;
   const hlsRecorder = state.hlsRecorders.recorders.get(channelNumber);
+  const playbackProcess = state.playback.playbackProcesses.get(channelNumber);
 
   return {
     ...ownProps,
@@ -18,7 +20,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    HLSRecorderActions: bindActionCreators(hlsRecorderActions, dispatch)
+    HLSRecorderActions: bindActionCreators(hlsRecorderActions, dispatch),
+    PlaybackActions: bindActionCreators(playbackActions, dispatch)
   };
 }
 

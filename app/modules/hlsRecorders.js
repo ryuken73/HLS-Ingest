@@ -148,61 +148,70 @@ const getLocalTarget = channelNumber => {
 
 export const startRecording = (channelNumber) => (dispatch, getState) => {
     return new Promise((resolve, reject) => {
-        console.log(`#### in startRecording:`, channelNumber);
-        const state = getState();
-        const [hlsRecorder, channelLog] = getChanneler(state, channelNumber);
-        const {
-            channelName,
-            recorder,
-        } = hlsRecorder;
-
-        const {activeSources, liveSelector, clipSelector} = state;
-        const channelActiveSource = activeSources.channelActiveSource.get(channelNumber);
-        const liveSource = liveSelector.currentSource.get(channelNumber);
-        const clipSource = clipSelector.currentClip.get(channelNumber);
-        const source = getIngestSource(channelActiveSource, liveSource, clipSource);   
-
-        channelLog.info(`start startRecroding() recorder.createTime:${recorder.createTime}`)
+        try {
+            console.log(`#### in startRecording:`, channelNumber);
+            const state = getState();
+            const [hlsRecorder, channelLog] = getChanneler(state, channelNumber);
+            const {
+                channelName,
+                recorder,
+            } = hlsRecorder;
     
-        recorder.src = source.url;
-        const remoteTarget = getIngestTarget(channelNumber);
-        const localTarget = getLocalTarget(channelNumber);
-        recorder.target = [remoteTarget, localTarget]
+            const {activeSources, liveSelector, clipSelector} = state;
+            const channelActiveSource = activeSources.channelActiveSource.get(channelNumber);
+            const liveSource = liveSelector.currentSource.get(channelNumber);
+            const clipSource = clipSelector.currentClip.get(channelNumber);
+            const source = getIngestSource(channelActiveSource, liveSource, clipSource);   
+    
+            channelLog.info(`start startRecroding() recorder.createTime:${recorder.createTime}`)
         
-        dispatch(setRecorderInTransition({channelNumber, inTransition:true}))
-        dispatch(setRecorderStatus({channelNumber, recorderStatus: 'starting'}))
+            recorder.src = source.url;
+            const remoteTarget = getIngestTarget(channelNumber);
+            const localTarget = getLocalTarget(channelNumber);
+            recorder.target = [remoteTarget, localTarget]
+            
+            dispatch(setRecorderInTransition({channelNumber, inTransition:true}))
+            dispatch(setRecorderStatus({channelNumber, recorderStatus: 'starting'}))
+            recorder.once('start', () => {
+                console.log('$$$ recorder started!')
+                resolve();
+            })
+            recorder.once('end', async (clipName, startTimestamp, duration) => {
+                try {
+                    channelLog.info(`recorder emitted end (listener1): ${clipName}`)
+                    const endTimestamp = Date.now();
+                    const startTime = utils.date.getString(new Date(startTimestamp),{sep:'-'})
+                    const endTime = utils.date.getString(new Date(endTimestamp),{sep:'-'})
+                    const url = remoteTarget;
+                    const title = source.title;
     
-        recorder.once('end', async (clipName, startTimestamp, duration) => {
-            try {
-                channelLog.info(`recorder emitted end (listener1): ${clipName}`)
-                const endTimestamp = Date.now();
-                const startTime = utils.date.getString(new Date(startTimestamp),{sep:'-'})
-                const endTime = utils.date.getString(new Date(endTimestamp),{sep:'-'})
-                const url = remoteTarget;
-                const title = source.title;
-
-                const clipData = {
-                    channelNumber,
-                    channelName,
-                    startTime,
-                    endTime,
-                    startTimestamp,
-                    endTimestamp,
-                    url,
-                    title,
-                    duration,
-                }
-                console.log('#######', clipData)
-                dispatch(refreshRecorder({channelNumber}));
-
-            } catch (error) {
-                if(error){
-                    channelLog.error(error)
-                }
-            }
-        })
+                    const clipData = {
+                        channelNumber,
+                        channelName,
+                        startTime,
+                        endTime,
+                        startTimestamp,
+                        endTimestamp,
+                        url,
+                        title,
+                        duration,
+                    }
+                    console.log('#######', clipData)
+                    dispatch(refreshRecorder({channelNumber}));
     
-        recorder.start();
+                } catch (error) {
+                    if(error){
+                        channelLog.error(error)
+                    }
+                }
+            })
+        
+            recorder.start();
+        } catch (error) {
+            reject(error);
+        }
+    
+
     })
 }
 

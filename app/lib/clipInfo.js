@@ -9,7 +9,8 @@ class Clip {
         const {title, duration, startTime, endTime} = this.clipInfo;
         const startHHMMSS = moment(startTime.split('-')[1],"hmmss").format("HH:mm:ss");
         const endHHMMSS = moment(endTime.split('-')[1],"hmmss").format("HH:mm:ss");
-        return `${startHHMMSS}_[${duration}]_${title}`;
+        const durationNormailzed = duration.replace(/\.\d\d$/, '');
+        return `${startHHMMSS}_[${durationNormailzed}]_${title}`;
     }
     get url(){return this.clipInfo.hlsm3u8}
 }

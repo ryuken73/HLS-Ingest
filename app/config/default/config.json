@@ -43,8 +43,17 @@
     "1": "udp://127.0.0.1:8881",
     "2": "udp://127.0.0.1:8882"
   },
+  "FFPLAY_OFFSET": {
+    "1": {"OFFSET_TOP": 250, "OFFSET_LEFT": 15},
+    "2": {"OFFSET_TOP": 250, "OFFSET_LEFT": 15}
+  },
+  "FFPLAY_SIZE": {
+    "WIDTH": 617,
+    "HEIGHT": 313
+  },
   "FFMPEG_OPTIONS": {
     "INPUT": "",
     "OUTPUT": ["-f", "mpegts", "-an", "-c:v", "mpeg2video", "-g", 15, "-b:v", "8000k", "-maxrate", "8000k", "-bufsize", "8000k"]
-  }
+  },
+  "DEFAULT_SOURCE": "live"
 }
