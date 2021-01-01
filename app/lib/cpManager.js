@@ -19,6 +19,7 @@ class CpManager {
         this.process.on('error', error => this.handleError(error));
         this.process.on('spawn', () => this.handleSpawn());
         this.process.on('exit', code => this.handleExit(code));
+        this.stdin = this.process.stdin;
     }
 
     stop = () => {

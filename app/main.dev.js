@@ -93,13 +93,14 @@ app.on('ready', async () => {
   const {width,height} = screen.getPrimaryDisplay().workAreaSize;
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1250,
+    width: 1280,
     minWidth: 400,
     minHeight: 750,
     height: height / 30,
     backgroundColor: '#252839',
     title: 'HLS Ingest',
     minimizable: false,
+    alwaysOnTop: false,
     webPreferences: {
       nodeIntegration: true,
       nativeWindowOpen: true
