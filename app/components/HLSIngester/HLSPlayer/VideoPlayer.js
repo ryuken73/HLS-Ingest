@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import Box from '@material-ui/core/Box'
 import PropTypes from 'prop-types';
 import Controls from './Controls.json';
 import videojs from 'video.js';
-import overlay from 'videojs-overlay';
 
 class VideoPlayer extends Component {
     playerId = `video-player-${Date.now() + (Math.random()*10000).toFixed(0)}`
@@ -71,8 +69,6 @@ class VideoPlayer extends Component {
     }
 
     init_player_events(props) {
-        let currentTime = 0;
-        let previousTime = 0;
         let position = 0;
 
         this.player.ready(() => {
