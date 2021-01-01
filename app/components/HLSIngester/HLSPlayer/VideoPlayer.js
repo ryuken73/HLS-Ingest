@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Controls from './Controls.json';
 import videojs from 'video.js';
+import overlay from 'videojs-overlay';
 
 class VideoPlayer extends Component {
     playerId = `video-player-${Date.now() + (Math.random()*10000).toFixed(0)}`
