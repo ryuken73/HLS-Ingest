@@ -62,7 +62,7 @@ function HLSIngest(props) {
             const {title} = currentSource;
             // const forkArgs = ['-left', left, '-top', top+OFFSET_TOP, '-alwaysontop', '-noborder', '-i', 'udp://127.0.0.1:8881'];
             const fastFFPlayOptions = ['-vf', 'setpts=PTS/15,fps=30'];
-            const normalFFPLayOptions = ['-window_title', title, '-x', WIDTH, '-y', HEIGHT, '-left', left+OFFSET_LEFT, '-top', top+OFFSET_TOP, '-alwaysontop'];
+            const normalFFPLayOptions = ['-window_title', `playback: ${title}`, '-x', WIDTH, '-y', HEIGHT, '-left', left+OFFSET_LEFT, '-top', top+OFFSET_TOP, '-alwaysontop'];
             const forkArgs = sourceFrom === 'live' ? normalFFPLayOptions : [...normalFFPLayOptions, ...fastFFPlayOptions];
             forkPlaybackProcess({channelNumber, forkArgs});
         } catch (error) {
@@ -94,6 +94,7 @@ function HLSIngest(props) {
         "stopped":"",
     }
 
+    const diableSourceSelector = recorderStatus !== 'stopped';
 
     return (
         <BorderedBox
@@ -109,10 +110,16 @@ function HLSIngest(props) {
                 <Box display="flex" flexDirection="column" padding="5px">
                     <Typography variant="body1">Source</Typography>
                     <Box mt="2px">
-                        <LiveSelectorContainer channelNumber={channelNumber}></LiveSelectorContainer>
+                        <LiveSelectorContainer 
+                            diableSourceSelector={diableSourceSelector} 
+                            channelNumber={channelNumber}
+                        ></LiveSelectorContainer>
                     </Box>
                     <Box mt="5px" mb="2px">
-                        <ClipSelectorContainer channelNumber={channelNumber}></ClipSelectorContainer>
+                        <ClipSelectorContainer 
+                            diableSourceSelector={diableSourceSelector} 
+                            channelNumber={channelNumber}
+                        ></ClipSelectorContainer>
                     </Box>
                 </Box>
                 <BasicButton 

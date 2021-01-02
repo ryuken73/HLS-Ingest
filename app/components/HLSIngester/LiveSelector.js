@@ -12,7 +12,8 @@ function LiveSelector(props) {
         areas=[],
         sources=[],
         active=true,
-        disabled=false
+        disabled=false,
+        diableSourceSelector=false
     } = props;
     
     const {
@@ -53,6 +54,7 @@ function LiveSelector(props) {
                     name="radio-button-demo"
                     inputProps={{ 'aria-label': 'A' }}
                     size="small"
+                    disabled={diableSourceSelector}
                 />
                 <Typography variant='body1'>Live</Typography>
             </Box>

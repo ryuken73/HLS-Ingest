@@ -13,6 +13,7 @@ function ClipSelector(props) {
         savedClips=[],
         active=true,
         disabled=false,
+        diableSourceSelector=false,
         withinHour=6
     } = props;
 
@@ -55,6 +56,7 @@ function ClipSelector(props) {
                     name="radio-button-demo"
                     inputProps={{ 'aria-label': 'A' }}
                     size="small"
+                    disabled={diableSourceSelector}
                 />
                 <Typography variant='body1'>Clip</Typography>
             </Box>
