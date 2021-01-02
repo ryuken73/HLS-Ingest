@@ -11,13 +11,16 @@ function mapStateToProps(state, ownProps) {
   const hlsRecorder = state.hlsRecorders.recorders.get(channelNumber);
   const playbackProcess = state.playback.playbackProcesses.get(channelNumber);
   const sourceFrom = state.activeSources.channelActiveSource.get(channelNumber);
-
+  const liveSource = state.liveSelector.currentSource.get(channelNumber)
+  const clipSource = state.clipSelector.currentClip.get(channelNumber)
 
   return {
     ...ownProps,
     inTransition: hlsRecorder.inTransition,
     recorderStatus: hlsRecorder.recorderStatus,
-    sourceFrom
+    sourceFrom,
+    liveSource,
+    clipSource
   }
 }
 

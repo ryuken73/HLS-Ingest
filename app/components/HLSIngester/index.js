@@ -29,7 +29,9 @@ function HLSIngest(props) {
     const {
         inTransition=false,
         recorderStatus="stopped",     
-        sourceFrom   
+        sourceFrom,
+        liveSource,
+        clipSource
     } = props;
 
     const {
@@ -53,12 +55,14 @@ function HLSIngest(props) {
     const startRecordChannel = async event => {
         try {
             const mainWindow = remote.getCurrentWindow();
-            mainWindow.setMovable(false);
+            // mainWindow.setMovable(false);
             const [left, top] = mainWindow.getPosition();            
             await startRecording(channelNumber);
+            const currentSource = sourceFrom === 'live' ? liveSource : clipSource;
+            const {title} = currentSource;
             // const forkArgs = ['-left', left, '-top', top+OFFSET_TOP, '-alwaysontop', '-noborder', '-i', 'udp://127.0.0.1:8881'];
             const fastFFPlayOptions = ['-vf', 'setpts=PTS/15,fps=30'];
-            const normalFFPLayOptions = ['-x', WIDTH, '-y', HEIGHT, '-left', left+OFFSET_LEFT, '-top', top+OFFSET_TOP, '-alwaysontop'];
+            const normalFFPLayOptions = ['-window_title', title, '-x', WIDTH, '-y', HEIGHT, '-left', left+OFFSET_LEFT, '-top', top+OFFSET_TOP, '-alwaysontop'];
             const forkArgs = sourceFrom === 'live' ? normalFFPLayOptions : [...normalFFPLayOptions, ...fastFFPlayOptions];
             forkPlaybackProcess({channelNumber, forkArgs});
         } catch (error) {
@@ -138,7 +142,7 @@ function HLSIngest(props) {
                 justifyContent="center"
                 width="618px" height="340px"
             >
-                <Box>{blankMessage[recorderStatus]}</Box>
+                <Box fontFamily="Roboto, Helvetica, Arial, sans-serif">{blankMessage[recorderStatus]}</Box>
             </BorderedBox>
         </BorderedBox>
     )

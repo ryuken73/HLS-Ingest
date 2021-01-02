@@ -60,7 +60,7 @@ function LiveSelector(props) {
             <Box ml="5px">
                 <Autocomplete
                     disabled={disabled}
-                    placeholder="AREA"
+                    placeholder="Area"
                     options={areas}
                     fontSize="10px"
                     onChange={handleChangeArea}
@@ -70,7 +70,7 @@ function LiveSelector(props) {
             <Box ml="2px">
                 <Autocomplete
                     disabled={disabled}
-                    placeholder="CCTV"
+                    placeholder="Live CCTV"
                     options={sources}
                     // onChange={setLiveSource}
                     onHighlightChange={setLiveSource}

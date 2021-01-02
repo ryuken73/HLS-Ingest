@@ -61,7 +61,7 @@ function ClipSelector(props) {
             <Box ml="5px">
                 <Autocomplete
                     disabled={disabled}
-                    placeholder="HOUR"
+                    placeholder="Hour"
                     options={hours}
                     fontSize="10px"
                     onChange={handleChangeHour}
@@ -71,7 +71,7 @@ function ClipSelector(props) {
             <Box ml="2px">
                 <Autocomplete
                     disabled={disabled}
-                    placeholder="CLIP"
+                    placeholder="Saved Clip"
                     options={savedClips}
                     // onChange={setClipSource}
                     onHighlightChange={setClipSource}
