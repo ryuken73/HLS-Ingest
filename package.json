@@ -56,10 +56,11 @@
     ]
   },
   "build": {
-    "productName": "HLSRecorder",
-    "appId": "org.dev.HLSRecorder",
+    "productName": "HLSIngest",
+    "appId": "org.dev.HLSIngest",
     "asarUnpack": [
       "bin/ffmpeg.exe",
+      "bin/ffplay.exe",
       "config/default/config.json",
       "config/default/sources.json"
     ],
@@ -67,7 +68,6 @@
       "dist/",
       "node_modules/",
       "app.html",
-      "lib/deleteOldFiles.js",
       "main.prod.js",
       "main.prod.js.map",
       "package.json",

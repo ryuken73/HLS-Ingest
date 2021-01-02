@@ -3,7 +3,7 @@ module.exports = () => {
     const defaultJsonFile = electronUtil.getAbsolutePath('config/default/sources.json', true);
     const customJsonFile = electronUtil.getAbsolutePath('config/sources.json', true);
     const defaultJson = electronUtil.readJSONFile(defaultJsonFile);
-    const customJson = electronUtil.readJSONFile(customJsonFile);
+    const customJson = customJsonFile ? electronUtil.readJSONFile(customJsonFile) : {sources:[]};
     const distinctByKey = (arrayObject, key) => {
         const resultsUniq = [];
         arrayObject.forEach(objectElement => {

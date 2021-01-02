@@ -18,10 +18,9 @@ const getAbsolutePath = (file='app.html', asarUnpack=false) => {
         const resourcesBased = path.resolve(path.join(resourcesPath, asarPath, file));
     
         if(fs.existsSync(cwdBased)){
-            // console.log('run in Nornal Electron CLI')
+            console.log('run in Nornal Electron CLI')
             return cwdBased;
-        } else if(fs.existsSync(cwdElectronReact)){
-            // console.log('run in Electron React Create App CLI');
+        } else if(fs.existsSync(cwdElectronReactBased)){
             return cwdElectronReactBased;
         } else if(fs.existsSync(resourcesBased)){
             // console.log('run in packaged Electron App');
@@ -74,7 +73,7 @@ const initElectronLog = options => {
         fileMaxSize=10485760,
         fileLogLevel='info',
         consoleLogLevel='info',
-        fileName='HLSRecorder.log'
+        fileName='HLSIngest.log'
     } = options;
     log.transports.console.format = consoleFormat;
     log.transports.file.maxSize = fileMaxSize;
