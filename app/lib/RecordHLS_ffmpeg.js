@@ -169,7 +169,7 @@ class RecoderHLS extends EventEmitter {
         try {
             // if file path contains back slash, ffmpeg fails. replace!
             const srcNormalized = this._src.replace(/\\/g, '/');
-            this.command = ffmpeg(srcNormalized);
+            this.command = ffmpeg(srcNormalized).inputOptions(inputOptions);
             if(typeof(this._target) === 'string'){
                 this.command = this.command.output(this._target).outputOptions(outputOptions);
             } else {

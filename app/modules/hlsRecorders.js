@@ -55,6 +55,7 @@ const createLogger = channelName => {
 
 import HLSRecorder from '../lib/RecordHLS_ffmpeg';
 import {getAbsolutePath} from '../lib/electronUtil';
+import {destroyPlaybackProcess} from './playback';
 
 const getChanneler = (state, channelNumber) => {
     const {recorders} = state.hlsRecorders;
@@ -198,6 +199,7 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
                     }
                     console.log('#######', clipData)
                     dispatch(refreshRecorder({channelNumber}));
+                    dispatch(destroyPlaybackProcess({channelNumber}));
     
                 } catch (error) {
                     if(error){

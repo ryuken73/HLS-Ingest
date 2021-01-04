@@ -51,6 +51,7 @@ function HLSIngest(props) {
 
     const {OFFSET_TOP, OFFSET_LEFT} = config.FFPLAY_OFFSET[channelNumber.toString()];
     const {WIDTH, HEIGHT} = config.FFPLAY_SIZE;
+    const {FFPLAY_FAST_PLAY} = config;
 
     const startRecordChannel = async event => {
         try {
@@ -63,7 +64,7 @@ function HLSIngest(props) {
             // const forkArgs = ['-left', left, '-top', top+OFFSET_TOP, '-alwaysontop', '-noborder', '-i', 'udp://127.0.0.1:8881'];
             const fastFFPlayOptions = ['-vf', 'setpts=PTS/15,fps=30'];
             const normalFFPLayOptions = ['-window_title', `playback: ${title}`, '-x', WIDTH, '-y', HEIGHT, '-left', left+OFFSET_LEFT, '-top', top+OFFSET_TOP, '-alwaysontop'];
-            const forkArgs = sourceFrom === 'live' ? normalFFPLayOptions : [...normalFFPLayOptions, ...fastFFPlayOptions];
+            const forkArgs = (sourceFrom === 'clip' && FFPLAY_FAST_PLAY === true) ?  [...normalFFPLayOptions, ...fastFFPlayOptions] : normalFFPLayOptions;
             forkPlaybackProcess({channelNumber, forkArgs});
         } catch (error) {
             console.error(error);

@@ -34,8 +34,9 @@
     "WIDTH": 617,
     "HEIGHT": 313
   },
+  "FFPLAY_FAST_PLAY": false,
   "FFMPEG_OPTIONS": {
-    "INPUT": "",
+    "INPUT": ["-re"],
     "OUTPUT": ["-f", "mpegts", "-an", "-c:v", "mpeg2video", "-g", 15, "-b:v", "8000k", "-maxrate", "8000k", "-bufsize", "8000k"]
   },
   "DEFAULT_SOURCE": "live"
