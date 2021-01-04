@@ -95,6 +95,12 @@ function HLSIngest(props) {
         "stopped":"",
     }
 
+    const sourceNotReady = () => {
+        const currentSource = sourceFrom === 'live' ? liveSource : clipSource;
+        return currentSource === undefined;
+
+    }
+
     const diableSourceSelector = recorderStatus !== 'stopped';
 
     return (
@@ -131,7 +137,7 @@ function HLSIngest(props) {
                     // bgcolor="#191d2e" 
                     height="90%" 
                     width="110px"
-                    disabled={inTransition}
+                    disabled={inTransition || sourceNotReady()}
                     onClick={recorderStatus==="started" ? stopRecordChannel : startRecordChannel}
                 >{ButtonText[recorderStatus]}</BasicButton>
             </BorderedBox>
