@@ -117,10 +117,10 @@ class RecoderHLS extends EventEmitter {
     set bytesRecorded(bytes) { this._bytesRecorded = bytes }
     set duration(duration) { 
         this._durationRecorded = duration;
-        this.emit('progress', {
-            bytes: this.bytesRecorded,
-            duration: this.duration
-        })
+        // this.emit('progress', {
+        //     bytes: this.bytesRecorded,
+        //     duration: this.duration
+        // })
     };
 
     onFFMPEGEnd = (error) => {
@@ -148,15 +148,16 @@ class RecoderHLS extends EventEmitter {
     }
     progressHandler = event => {
         this.duration = event.timemark;
+        this.emit('progress', event);
         this.log.debug(`duration: ${this.duration}`);
-        const CRITICAL_SUCCESSIVE_OCCUR_COUNT = 5;
-        const durationNotChanged = this.checkSuccessiveEvent(this.duration, CRITICAL_SUCCESSIVE_OCCUR_COUNT);
-        this.log.debug(`value of durationNotChanged: ${durationNotChanged}, duration=${this.duration}`);
-        if(durationNotChanged){
-            this.log.error(`duration not changed last ${CRITICAL_SUCCESSIVE_OCCUR_COUNT} times`)
-            this.log.error(`kill ffmpeg`)
-            this.command.kill();
-        }
+        // const CRITICAL_SUCCESSIVE_OCCUR_COUNT = 5;
+        // const durationNotChanged = this.checkSuccessiveEvent(this.duration, CRITICAL_SUCCESSIVE_OCCUR_COUNT);
+        // this.log.debug(`value of durationNotChanged: ${durationNotChanged}, duration=${this.duration}`);
+        // if(durationNotChanged){
+        //     this.log.error(`duration not changed last ${CRITICAL_SUCCESSIVE_OCCUR_COUNT} times`)
+        //     this.log.error(`kill ffmpeg`)
+        //     this.command.kill();
+        // }
     }
 
     start = () => {

@@ -89,7 +89,8 @@ export const createRecorder = (channelNumber, createdByError=false) => (dispatch
         },1000);
     }
     const progressHandler = progress => {
-        dispatch(setDuration({channelNumber, duration:progress.duration}));
+        console.log(progress)
+        dispatch(setDuration({channelNumber, duration:progress.timemark}));
     }
     const errorHandler = error => {
         channelLog.error(`error occurred`);
