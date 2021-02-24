@@ -177,5 +177,5 @@ const HLSPlayer = (props) => {
     );
 };
 
-// export default React.memo(HLSPlayer);
-export default HLSPlayer
+export default React.memo(HLSPlayer);
+// export default HLSPlayer

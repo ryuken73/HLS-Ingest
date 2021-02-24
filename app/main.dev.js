@@ -18,6 +18,19 @@ import path from 'path';
 import { serialize } from 'v8';
 // const path = require('path')
 
+const getConfig = require('./lib/getConfig');
+const config = getConfig.getCombinedConfig();
+const {INSTANCE_NAME='hlsInstance1'} = config;
+const fs = require('fs');
+const userHomeDir = app.getPath('home');
+const newHomeDir = path.join(userHomeDir, INSTANCE_NAME);
+try {
+  fs.mkdirSync(newHomeDir)
+} catch(error) {
+  console.log('Path already Exists: ', newHomeDir)
+}
+app.setPath('home', newHomeDir);
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
