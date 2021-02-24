@@ -3,7 +3,15 @@ import {createAction, handleActions} from 'redux-actions';
 
 // get cctv list
 const cctvFromConfig = require('../lib/getCCTVList');
-const sources = cctvFromConfig();
+const sourcesFromConfig = cctvFromConfig();
+const sources = sourcesFromConfig.map(source => {
+    return {
+        area: source.title.split(' ')[0],
+        ...source
+    }
+})
+
+console.log(sources)
 
 // get uniq area from sources
 const areasOnly = sources.map(source => {
