@@ -48,7 +48,7 @@ export default function Highlights(props) {
         return (
           <div>
             {parts.map((part, index) => (
-              <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+              <span key={index} style={{ fontSize:'10px', fontWeight: part.highlight ? 700 : 400 }}>
                 {part.text}
               </span>
             ))}
