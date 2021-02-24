@@ -11,8 +11,6 @@ const sources = sourcesFromConfig.map(source => {
     }
 })
 
-console.log(sources)
-
 // get uniq area from sources
 const areasOnly = sources.map(source => {
     return {title: source.area}

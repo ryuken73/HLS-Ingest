@@ -15,27 +15,6 @@ const hours = DISPLAY_HOURS.map(hour => {
     return {title:hour.toString(), value:hour}
 });
 
-// get saved clip list
-const Store = require('electron-store');
-const {remote} = require('electron');
-const clipStore = new Store({
-    name:'clipStore',
-    cwd:remote.app.getPath('home')
-});
-
-const {createClipData} = require('../lib/clipInfo');
-const getClipData = (clipStore) => {
-    const savedClipsObj = clipStore.store;
-    const savedClipsArray = Object.values(savedClipsObj)
-    return savedClipsArray.map(clip => createClipData(clip))
-}
-const makeBaseClips = savedClips => {
-    const baseClips = new Map();
-    for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
-        baseClips.set(channelNumber, savedClips)
-    }
-    return baseClips;
-}
 const makeWithinHours = () => {
     const withinHours = new Map();
     for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
@@ -44,36 +23,96 @@ const makeWithinHours = () => {
     return withinHours;
 }
 
-const savedClips = getClipData(clipStore);
-const baseClips = makeBaseClips(savedClips);
 const withinHours = makeWithinHours();
 
-// initialize channel's saved clip
+///
+
+// get cctv list
+const cctvFromConfig = require('../lib/getCCTVList');
+const sourcesFromConfig = cctvFromConfig();
+const sources = sourcesFromConfig.map(source => {
+    return {
+        area: source.title.split(' ')[0],
+        ...source
+    }
+})
+
+// get uniq area from sources
+const areasOnly = sources.map(source => {
+    return {title: source.area}
+})
+const uniqAreas = [...new Set(areasOnly.map(area => JSON.stringify(area)))]
+                  .map(uniqArea => JSON.parse(uniqArea))
+
+// get saved clip list
+const Store = require('electron-store');
+const {remote} = require('electron');
+const clipStore = new Store({
+    name:'clipStore',
+    cwd:remote.app.getPath('home')
+});
+
+// initialize channel's sources
+const {createClipData} = require('../lib/clipInfo');
+const getClipData = (clipStore) => {
+    const savedClipsObj = clipStore.store;
+    const savedClipsArray = Object.values(savedClipsObj)
+    return savedClipsArray.map(clip => createClipData(clip))
+}
+
+const baseClips = getClipData(clipStore);
+const currentClips = new Map();
+for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
+    currentClips.set(channelNumber, baseClips)
+}
 const currentClip = new Map();
+console.log(baseClips)
 
 // action types
-const SET_WITHIN_HOURS = 'clipSelector/SET_WITHIN_HOURS';
+const SET_AREA = 'clipSelector/SET_AREA';
 const SET_CURRENT_CLIP = 'clipSelector/SET_CURRENT_CLIP';
-const SET_BASE_CLIPS = 'clipSelector/SET_BASE_CLIPS';
-
+const SET_CURRENT_CLIPS = 'clipSelector/SET_CURRENT_CLIPS';
+const SET_WITHIN_HOURS = 'clipSelector/SET_WITHIN_HOURS';
 
 // action creator
-export const setWithinHours = createAction(SET_WITHIN_HOURS);
+export const setArea = createAction(SET_AREA);
 export const setCurrentClip = createAction(SET_CURRENT_CLIP);
-export const setBaseClips = createAction(SET_BASE_CLIPS);
+export const setCurrentClips = createAction(SET_CURRENT_CLIPS);
+export const setWithinHours = createAction(SET_WITHIN_HOURS);
 
 // thunk
+export const limitSources = (channelNumber, selectedArea) => (dispatch, getState) => {
+    console.log('###limitSources', channelNumber, selectedArea)
+    const state = getState();
+    const {baseClips} = state.clipSelector;
+    if(selectedArea === null){
+        dispatch(setCurrentClips({channelNumber, channelClips:[...baseClips]}));
+        return
+    }
+    const limitedSources = baseClips.filter(clip => clip.title.includes(`_${selectedArea.title}`));
+    console.log(limitedSources, baseClips[0].title)
+    dispatch(setCurrentClips({channelNumber, channelClips: limitedSources}))
+}
 
 const initialState = {
-    hours,
-    withinHours,
+    areas: uniqAreas,
     baseClips,
     currentClip,
-    // currentClips
+    currentClips,
+    hours,
+    withinHours
 }
 
 // reducer
 export default handleActions({
+    [SET_AREA]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {areas} = action.payload;
+        return {
+            ...state,
+            areas
+        }
+    },
     [SET_CURRENT_CLIP]: (state, action) => {
         // console.log('%%%%%%%%%%%%%%%%', action.payload);
         const {channelNumber, clipInfo} = action.payload;
@@ -86,6 +125,17 @@ export default handleActions({
             currentClip: newCurrentClip
         }
     },
+    [SET_CURRENT_CLIPS]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {channelNumber, channelClips} = action.payload;    
+        const {currentClips} = state;
+        currentClips.set(channelNumber, channelClips);
+        const newCurrentClips = new Map(currentClips)
+        return {
+            ...state,
+            currentClips: newCurrentClips
+        }
+    },
     [SET_WITHIN_HOURS]: (state, action) => {
         // console.log('%%%%%%%%%%%%%%%%', action.payload);
         const {channelNumber, hours} = action.payload;
@@ -96,14 +146,6 @@ export default handleActions({
         return {
             ...state,
             withinHours: newWithinHours
-        }
-    },
-    [SET_BASE_CLIPS]: (state, action) => {
-        // console.log('%%%%%%%%%%%%%%%%', action.payload);
-        const {baseClips} = action.payload;      
-        return {
-            ...state,
-            baseClips
         }
     }
 }, initialState);

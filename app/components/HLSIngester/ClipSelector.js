@@ -10,7 +10,8 @@ function ClipSelector(props) {
     const {
         channelNumber='x',
         hours=[],
-        savedClips=[],
+        areas=[],
+        clips=[],
         active=true,
         disabled=false,
         diableSourceSelector=false,
@@ -19,6 +20,7 @@ function ClipSelector(props) {
 
     const {
         // updateCurrentClips=()=>{},
+        limitSources=()=>{},
         setWithinHours=()=>{},
         setCurrentClip=()=>{}
     } = props.ClipSelectorActions;
@@ -30,6 +32,9 @@ function ClipSelector(props) {
 
     const handleChange = (event) => {
         setChannelActiveSource({channelNumber, sourceFrom: event.target.value});
+    };
+    const handleChangeArea = (event, value) => {
+        limitSources(channelNumber, value)
     };
     const handleChangeHour = (event, value) => {
         // updateCurrentClips(channelNumber, value)
@@ -60,7 +65,7 @@ function ClipSelector(props) {
                 />
                 <Typography variant='body1'>Clip</Typography>
             </Box>
-            <Box ml="5px">
+            {/* <Box ml="5px">
                 <Autocomplete
                     disabled={disabled}
                     placeholder="Hour"
@@ -69,12 +74,22 @@ function ClipSelector(props) {
                     onChange={handleChangeHour}
                     color={AutoCompleteColor}
                 ></Autocomplete>
+            </Box> */}
+            <Box ml="5px">
+                <Autocomplete
+                    disabled={disabled}
+                    placeholder="Area"
+                    options={areas}
+                    fontSize="10px"
+                    onChange={handleChangeArea}
+                    color={AutoCompleteColor}
+                ></Autocomplete>
             </Box>
             <Box ml="2px">
                 <Autocomplete
                     disabled={disabled}
                     placeholder="Saved Clip"
-                    options={savedClips}
+                    options={clips}
                     // onChange={setClipSource}
                     onHighlightChange={setClipSource}
                     width={"300px"}
