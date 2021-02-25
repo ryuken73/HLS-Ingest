@@ -39,7 +39,7 @@ function LiveSelector(props) {
         debouncedChangePlayerSource({channelNumber, source:value, sourceType:'live'});
     };
 
-    const AutoCompleteColor = disabled ? "darkslategrey" : "white";
+    const AutoCompleteColor = active ? "white" : "darkslategrey";
 
     return (
         <Box
