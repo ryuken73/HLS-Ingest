@@ -31,7 +31,7 @@ function ClipSelector(props) {
     const {setChannelActiveSource=()=>{}} = props.ActiveSourcesActions;
 
     const handleChange = (event) => {
-        setChannelActiveSource({channelNumber, sourceFrom: event.target.value});
+        setChannelActiveSource({channelNumber, sourceFrom: 'clip'});
     };
     const handleChangeArea = (event, value) => {
         limitSources(channelNumber, value)
@@ -77,7 +77,8 @@ function ClipSelector(props) {
             </Box> */}
             <Box ml="5px">
                 <Autocomplete
-                    disabled={disabled}
+                    // disabled={disabled}
+                    onFocus={handleChange}
                     placeholder="Area"
                     options={areas}
                     fontSize="10px"
@@ -88,7 +89,8 @@ function ClipSelector(props) {
             </Box>
             <Box ml="2px">
                 <Autocomplete
-                    disabled={disabled}
+                    // disabled={disabled}
+                    onFocus={handleChange}
                     placeholder="Saved Clip"
                     options={clips}
                     // onChange={setClipSource}

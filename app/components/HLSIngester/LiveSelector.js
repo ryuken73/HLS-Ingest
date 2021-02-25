@@ -28,7 +28,7 @@ function LiveSelector(props) {
 
     
     const handleChange = (event) => {
-        setChannelActiveSource({channelNumber, sourceFrom: event.target.value});
+        setChannelActiveSource({channelNumber, sourceFrom: 'live'});
     };    
     const handleChangeArea = (event, value) => {
         limitSources(channelNumber, value)
@@ -61,7 +61,8 @@ function LiveSelector(props) {
 
             <Box ml="5px">
                 <Autocomplete
-                    disabled={disabled}
+                    // disabled={disabled}
+                    onFocus={handleChange}
                     placeholder="Area"
                     options={areas}
                     fontSize="10px"
@@ -72,7 +73,8 @@ function LiveSelector(props) {
             </Box>
             <Box ml="2px">
                 <Autocomplete
-                    disabled={disabled}
+                    // disabled={disabled}
+                    onFocus={handleChange}
                     placeholder="Live CCTV"
                     options={sources}
                     // onChange={setLiveSource}
