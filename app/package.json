@@ -1,7 +1,7 @@
 {
   "name": "HLSIngest",
   "productName": "HLSIngest",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "electron template for fast develop",
   "main": "./main.prod.js",
   "scripts": {
