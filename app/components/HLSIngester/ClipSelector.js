@@ -84,7 +84,7 @@ function ClipSelector(props) {
                     fontSize="10px"
                     onChange={handleChangeArea}
                     color={AutoCompleteColor}
-                    debug
+                    autoSelect
                 ></Autocomplete>
             </Box>
             <Box ml="2px">
@@ -98,7 +98,7 @@ function ClipSelector(props) {
                     width={"300px"}
                     fontSize="10px"
                     color={AutoCompleteColor}
-                    debug
+                    autoSelect
                 ></Autocomplete>
             </Box>
         </Box>

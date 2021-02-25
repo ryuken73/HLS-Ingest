@@ -68,7 +68,7 @@ function LiveSelector(props) {
                     fontSize="10px"
                     onChange={handleChangeArea}
                     color={AutoCompleteColor}
-                    debug
+                    autoSelect
                 ></Autocomplete>
             </Box>
             <Box ml="2px">
@@ -79,9 +79,10 @@ function LiveSelector(props) {
                     options={sources}
                     // onChange={setLiveSource}
                     onHighlightChange={setLiveSource}
-                    width={300}
+                    width={"300px"}
                     fontSize="10px"
                     color={AutoCompleteColor}
+                    autoSelect
                 ></Autocomplete>
             </Box>
         </Box>
