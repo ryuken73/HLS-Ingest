@@ -14,10 +14,9 @@ function mapStateToProps(state, ownProps) {
   const {currentClips, areas, hours} = state.clipSelector
   const {channelActiveSource} = state.activeSources;
   const active = channelActiveSource.get(channelNumber) === 'clip';
-  const disabled = !active;
-  // const savedClips = baseClips.get(channelNumber).filter(() => {return true})
-  // const savedClips = baseClips.get(channelNumber);
-  // const withinHour = withinHours.get(channelNumber)
+  // const disabled = !active;
+  const hlsRecorder = state.hlsRecorders.recorders.get(channelNumber);
+  const disabled = hlsRecorder.recorderStatus === 'stopped' ? false : true;
 
   return {
     ...ownProps,

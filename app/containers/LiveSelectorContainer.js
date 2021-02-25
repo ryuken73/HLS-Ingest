@@ -14,7 +14,10 @@ function mapStateToProps(state, ownProps) {
   const {currentSources, areas} = state.liveSelector;
   const {channelActiveSource} = state.activeSources;
   const active = channelActiveSource.get(channelNumber) === 'live';
-  const disabled = !active;
+  // const disabled = !active;
+  const hlsRecorder = state.hlsRecorders.recorders.get(channelNumber);
+  const disabled = hlsRecorder.recorderStatus === 'stopped' ? false : true;
+
   return {
     ...ownProps,
     sources: currentSources.get(channelNumber),

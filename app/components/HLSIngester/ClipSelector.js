@@ -46,7 +46,7 @@ function ClipSelector(props) {
         debouncedChangePlayerSource({channelNumber, source:value, sourceType:'clip'});
     }
 
-    const AutoCompleteColor = disabled ? "darkslategrey" : "white";
+    const AutoCompleteColor = active ? "white" : "darkslategrey";
 
     return (
         <Box
@@ -77,7 +77,7 @@ function ClipSelector(props) {
             </Box> */}
             <Box ml="5px">
                 <Autocomplete
-                    // disabled={disabled}
+                    disabled={disabled}
                     onFocus={handleChange}
                     placeholder="Area"
                     options={areas}
@@ -89,7 +89,7 @@ function ClipSelector(props) {
             </Box>
             <Box ml="2px">
                 <Autocomplete
-                    // disabled={disabled}
+                    disabled={disabled}
                     onFocus={handleChange}
                     placeholder="Saved Clip"
                     options={clips}
