@@ -28,8 +28,8 @@
     "2": "udp://127.0.0.1:8882"
   },
   "FFPLAY_OFFSET": {
-    "1": {"OFFSET_TOP": 250, "OFFSET_LEFT": 15},
-    "2": {"OFFSET_TOP": 250, "OFFSET_LEFT": 650}
+    "1": {"OFFSET_TOP": 235, "OFFSET_LEFT": 12},
+    "2": {"OFFSET_TOP": 232, "OFFSET_LEFT": 645}
   },
   "FFPLAY_SIZE": {
     "WIDTH": 617,

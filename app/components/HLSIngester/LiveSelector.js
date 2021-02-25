@@ -67,6 +67,7 @@ function LiveSelector(props) {
                     fontSize="10px"
                     onChange={handleChangeArea}
                     color={AutoCompleteColor}
+                    debug
                 ></Autocomplete>
             </Box>
             <Box ml="2px">

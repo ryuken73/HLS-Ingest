@@ -146,6 +146,7 @@ function HLSIngest(props) {
                 bgcolor="black"
                 alignItems="center"
                 justifyContent="center"
+                height="400px"
             >
                 <HLSPlayerContainer channelNumber={channelNumber}></HLSPlayerContainer>
             </BorderedBox>
@@ -154,7 +155,7 @@ function HLSIngest(props) {
                 bgcolor="black"
                 alignItems="center"
                 justifyContent="center"
-                width="618px" height="340px"
+                width="618px" height="400px"
             >
                 <Box fontFamily="Roboto, Helvetica, Arial, sans-serif">{blankMessage[recorderStatus]}</Box>
             </BorderedBox>
