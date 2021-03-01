@@ -44,7 +44,7 @@ export default function Highlights(props) {
       renderOption={(option, { inputValue }) => {
         const matches = match(option.title, inputValue);
         const parts = parse(option.title, matches);
-
+        
         return (
           <div>
             {parts.map((part, index) => (

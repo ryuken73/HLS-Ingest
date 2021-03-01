@@ -9,6 +9,7 @@ import {BasicButton} from '../template/basicComponents';
 import {SmallButton} from '../template/smallComponents';
 import DurationContainer from '../../containers/DurationContainer';
 import HLSPlayerContainer from '../../containers/HLSPlayerContainer';
+import TimePointer from './TimePointer';
 
 const {getDefaultConfig} = require('../../lib/getConfig');
 const config = getDefaultConfig();
@@ -110,6 +111,7 @@ function HLSIngest(props) {
             flexDirection="column"
             flexGrow={0}
             width={610}
+            height={570}
             // bgcolor="#2d2f3b"
         >
             <DurationContainer channelNumber={channelNumber} bgColors={bgColors}></DurationContainer>
@@ -159,6 +161,10 @@ function HLSIngest(props) {
             >
                 <Box fontFamily="Roboto, Helvetica, Arial, sans-serif">{blankMessage[recorderStatus]}</Box>
             </BorderedBox>
+            <TimePointer
+                    channelNumber={channelNumber} 
+                    bgColors={bgColors}
+            ></TimePointer>
         </BorderedBox>
     )
 }

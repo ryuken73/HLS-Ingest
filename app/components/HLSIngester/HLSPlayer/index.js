@@ -93,7 +93,8 @@ const HLSPlayer = (props) => {
     },[]);
 
     const onVideoSeeked =  React.useCallback((from, to) => {
-        // channelLog.info(`Video seeked from ${from} to ${to}`);
+        console.log('## seeked', from, to)
+        channelLog.info(`Video seeked from ${from} to ${to}`);
     },[])
 
     const onVideoError = React.useCallback((error) => {

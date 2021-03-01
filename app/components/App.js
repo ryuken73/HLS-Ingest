@@ -58,7 +58,7 @@ function App(props) {
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" height="1">
-        <Box display="flex">
+        <Box display="flex" flexGrow={0}>
           {channels.map(channelNumber => (<HLSIngesterContainer key={channelNumber} channelNumber={channelNumber}></HLSIngesterContainer>))}
         </Box>
         <MessageContainer mt="auto"></MessageContainer> 

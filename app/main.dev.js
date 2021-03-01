@@ -108,13 +108,14 @@ app.on('ready', async () => {
     show: false,
     width: 1280,
     minWidth: 400,
+    height: 670,
     // minHeight: 750,
     // height: height / 30,
     backgroundColor: '#252839',
     title: 'HLS Ingest',
     minimizable: false,
     alwaysOnTop: false,
-    resizable: false,
+    resizable: true,
     webPreferences: {
       nodeIntegration: true,
       nativeWindowOpen: true

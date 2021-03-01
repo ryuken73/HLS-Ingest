@@ -13,10 +13,10 @@ function Duration(props) {
         duration="00:00:00.00",
         bgColors={}
     } = props;
-    const channelName = `Ingest${channelNumber}`
+    const channelName = `Ingest[${channelNumber}]`
     const bgColor = bgColors[recorderStatus];
     const channel = {
-        subject: <Typography variant="body1">{channelName}</Typography>,
+        subject: <Box ml={"3px"}><Typography variant="body1">{channelName}</Typography></Box>,
         content: (
             <Box display="flex" width="100%" m="0px"> 
                 <SmallMarginTextField 
