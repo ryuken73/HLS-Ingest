@@ -14,7 +14,9 @@ function mapStateToProps(state, ownProps) {
   // console.log('mapStateToProps:',state)
   const {channelNumber} = ownProps;
   const hlsRecorder = state.hlsRecorders.recorders.get(channelNumber);
+  const hlsPlayer = state.hlsPlayers.players.get(channelNumber);
   const {startTimeSeconds, stopTimeSeconds, inTransition, recorderStatus} = hlsRecorder;
+  const {seeked} = hlsPlayer;
 
   const {channelActiveSource} = state.activeSources;
   const activeSource = channelActiveSource.get(channelNumber);

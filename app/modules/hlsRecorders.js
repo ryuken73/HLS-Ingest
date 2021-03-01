@@ -165,6 +165,8 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
             const {
                 channelName,
                 recorder,
+                startTimeSeconds,
+                stopTimeSeconds
             } = hlsRecorder;
     
             const {activeSources, liveSelector, clipSelector} = state;
@@ -176,6 +178,8 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
             channelLog.info(`start startRecroding() recorder.createTime:${recorder.createTime}`)
         
             recorder.src = source.url;
+            recorder.ffmpegOptSS = startTimeSeconds;
+            recorder.ffmpegOptTO = stopTimeSeconds;
             const remoteTarget = getIngestTarget(channelNumber);
             const localTarget = getLocalTarget(channelNumber);
             recorder.target = [remoteTarget, localTarget]

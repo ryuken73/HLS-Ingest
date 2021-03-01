@@ -86,7 +86,7 @@ class VideoPlayer extends Component {
             props.onTimeUpdate(this.player.currentTime());
         });
         this.player.on('canplay', () => {
-            props.onCanPlay()
+            props.onCanPlay(this.player)
         })
         this.player.on('seeking', () => {
             this.player.off('timeupdate', () => { });

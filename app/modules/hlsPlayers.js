@@ -31,7 +31,8 @@ for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
         ...DEFAULT_PLAYER_PROPS,
         // source,
         channelName: `${CHANNEL_PREFIX}${channelNumber}`,
-        overlayContent: mkOverlayContent(url)
+        overlayContent: mkOverlayContent(url),
+        seeked: null
     }
     players.set(channelNumber, hlsPlayer);
 }
@@ -40,11 +41,13 @@ for(let channelNumber=1;channelNumber<=NUMBER_OF_CHANNELS;channelNumber++){
 // action types
 const SET_PLAYER = 'hlsPlayers/SET_PLAYER';
 const SET_PLAYER_SOURCE = 'hlsPlayers/SET_PLAYER_SOURCE';
+const SET_PLAYER_SEEKED = 'hlsPlayers/SET_PLAYER_SEEKED';
 const REFRESH_PLAYER = 'hlsPlayers/REFRESH_PLAYER';
 
 // action creator
 export const setPlayer = createAction(SET_PLAYER);
 export const setPlayerSource = createAction(SET_PLAYER_SOURCE);
+export const setPlayerSeeked = createAction(SET_PLAYER_SEEKED);
 export const refreshPlayer = createAction(REFRESH_PLAYER);
 
 // redux thunk
@@ -95,6 +98,18 @@ export default handleActions({
 
         const players = new Map(state.players);
 
+        players.set(channelNumber, hlsPlayer);
+        return {
+            ...state,
+            players
+        }
+    },
+    [SET_PLAYER_SEEKED]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {channelNumber, seeked} = action.payload;
+        const hlsPlayer = {...state.players.get(channelNumber)};
+        hlsPlayer.seeked = seeked;
+        const players = new Map(state.players);
         players.set(channelNumber, hlsPlayer);
         return {
             ...state,

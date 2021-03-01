@@ -28,6 +28,15 @@ const HLSPlayer = (props) => {
         LONG_BUFFERING_MS_SECONDS=3000
     } = props;
     
+    const {
+        setPlayerSeeked
+    } = props.HLSPlayersActions;
+
+    const {
+        setRecorderStartTimeSeconds,
+        setRecorderStopTimeSeconds
+    } = props.HLSRecordersActions;
+
     // todo: move below in config file
     const width=600;
     const height=340; 
@@ -93,8 +102,8 @@ const HLSPlayer = (props) => {
     },[]);
 
     const onVideoSeeked =  React.useCallback((from, to) => {
-        console.log('## seeked', from, to)
         channelLog.info(`Video seeked from ${from} to ${to}`);
+        setPlayerSeeked({channelNumber, seeked:to})
     },[])
 
     const onVideoError = React.useCallback((error) => {
@@ -107,8 +116,10 @@ const HLSPlayer = (props) => {
     const onVideoEnd = React.useCallback(() => {
         // channelLog.info("Video ended");
     },[])
-    const onVideoCanPlay = () => {
+    const onVideoCanPlay = player => {
         channelLog.info('can play');
+        setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
+        setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:player.duration()});
         if(restorePlaybackRate && player){
             const playbackRate = getPlaybackRateStore();
             player.playbackRate(playbackRate);

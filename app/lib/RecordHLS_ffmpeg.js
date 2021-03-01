@@ -121,6 +121,8 @@ class RecoderHLS extends EventEmitter {
     set rStream(stream) { this._rStream = stream }
     set wStream(stream) { this._wStream = stream }
     set bytesRecorded(bytes) { this._bytesRecorded = bytes }
+    set ffmpegOptSS(startTimme) { this._ffmpegOptSS = startTimme }
+    set ffmpegOptTO(stopTime) { this._ffmpegOptTO = stopTime }
     set duration(duration) { 
         this._durationRecorded = duration;
         // this.emit('progress', {
