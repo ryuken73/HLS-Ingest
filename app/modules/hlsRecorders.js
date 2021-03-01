@@ -28,7 +28,9 @@ for(let channelNumber=1 ; channelNumber<=NUMBER_OF_CHANNELS ; channelNumber++){
         duration: INITIAL_DURATION,
         recorder: null,
         inTransition: false,
-        recorderStatus: 'stopped'
+        recorderStatus: 'stopped',
+        startTimeSeconds: null,
+        stopTimeSeconds: null
     }
     recorders.set(channelNumber, hlsRecorder);
 }
@@ -38,12 +40,16 @@ const SET_DURATION = 'hlsRecorders/SET_DURATION';
 const SET_RECORDER = 'hlsRecorders/SET_RECORDER';
 const SET_RECORDER_STATUS = 'hlsRecorders/SET_RECORDER_STATUS';
 const SET_RECORDER_INTRANSITION = 'hlsRecorders/SET_RECORDER_INTRANSITION';
+const SET_RECORDER_START_TIME_SECONDS = 'hlsRecorders/SET_RECORDER_START_TIME_SECONDS';
+const SET_RECORDER_STOP_TIME_SECONDS = 'hlsRecorders/SET_RECORDER_STOP_TIME_SECONDS';
 
 // action creator
 export const setDuration = createAction(SET_DURATION);
 export const setRecorder = createAction(SET_RECORDER);
 export const setRecorderStatus = createAction(SET_RECORDER_STATUS);
 export const setRecorderInTransition = createAction(SET_RECORDER_INTRANSITION);
+export const setRecorderStartTimeSeconds = createAction(SET_RECORDER_START_TIME_SECONDS);
+export const setRecorderStopTimeSeconds = createAction(SET_RECORDER_STOP_TIME_SECONDS);
 
 import log from 'electron-log';
 const createLogger = channelName => {
@@ -68,7 +74,7 @@ const getChanneler = (state, channelNumber) => {
 export const createRecorder = (channelNumber, createdByError=false) => (dispatch, getState) => {
     const state = getState();
     const [hlsRecorder, channelLog] = getChanneler(state, channelNumber);
-    const {channelName} = hlsRecorder;
+    const {channelName, startTimeSeconds, stopTimeSeconds} = hlsRecorder;
     const url = '';
 
     channelLog.info(`create HLS Recorder`)
@@ -78,6 +84,8 @@ export const createRecorder = (channelNumber, createdByError=false) => (dispatch
         name: channelName,
         src: url, 
         ffmpegBinary: ffmpegPath,
+        startTimeSeconds,
+        stopTimeSeconds
     }
     const recorder = HLSRecorder.createHLSRecoder(recorderOptions);
 
@@ -298,6 +306,30 @@ export default handleActions({
         const {channelNumber, inTransition} = action.payload;
         const channelRecorder = {...state.recorders.get(channelNumber)};
         channelRecorder.inTransition = inTransition;
+        const recorders = new Map(state.recorders);
+        recorders.set(channelNumber, channelRecorder);
+        return {
+            ...state,
+            recorders
+        }
+    },
+    [SET_RECORDER_START_TIME_SECONDS]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {channelNumber, startTimeSeconds} = action.payload;
+        const channelRecorder = {...state.recorders.get(channelNumber)};
+        channelRecorder.startTimeSeconds = startTimeSeconds;
+        const recorders = new Map(state.recorders);
+        recorders.set(channelNumber, channelRecorder);
+        return {
+            ...state,
+            recorders
+        }
+    },
+    [SET_RECORDER_STOP_TIME_SECONDS]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {channelNumber, stopTimeSeconds} = action.payload;
+        const channelRecorder = {...state.recorders.get(channelNumber)};
+        channelRecorder.stopTimeSeconds = stopTimeSeconds;
         const recorders = new Map(state.recorders);
         recorders.set(channelNumber, channelRecorder);
         return {

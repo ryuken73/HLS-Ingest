@@ -9,7 +9,8 @@ import {BasicButton} from '../template/basicComponents';
 import {SmallButton} from '../template/smallComponents';
 import DurationContainer from '../../containers/DurationContainer';
 import HLSPlayerContainer from '../../containers/HLSPlayerContainer';
-import TimePointer from './TimePointer';
+import TimePointerContainer from '../../containers/TimePointerContainer';
+// import TimePointer from './TimePointer';
 
 const {getDefaultConfig} = require('../../lib/getConfig');
 const config = getDefaultConfig();
@@ -161,10 +162,10 @@ function HLSIngest(props) {
             >
                 <Box fontFamily="Roboto, Helvetica, Arial, sans-serif">{blankMessage[recorderStatus]}</Box>
             </BorderedBox>
-            <TimePointer
+            <TimePointerContainer
                     channelNumber={channelNumber} 
                     bgColors={bgColors}
-            ></TimePointer>
+            ></TimePointerContainer>
         </BorderedBox>
     )
 }

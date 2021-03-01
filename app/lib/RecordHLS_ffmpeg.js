@@ -43,7 +43,9 @@ class RecoderHLS extends EventEmitter {
             target='target.mp4', 
             enablePlayback=false, 
             ffmpegBinary='./ffmpeg.exe',
-            renameDoneFile=false
+            renameDoneFile=false,
+            startTimeSeconds=0,
+            stopTimeSeconds=null
         } = options;
         this._name = name;
         this._src = src;
@@ -52,6 +54,8 @@ class RecoderHLS extends EventEmitter {
         this._enablePlayback = enablePlayback;
         this._ffmpegBinary = ffmpegBinary;
         this._renameDoneFile = renameDoneFile;
+        this._ffmpegOptSS = startTimeSeconds;
+        this._ffmpegOptTO = stopTimeSeconds;
 
         ffmpeg.setFfmpegPath(this._ffmpegBinary);
         this.log = (() => {
@@ -89,6 +93,8 @@ class RecoderHLS extends EventEmitter {
     get createTime() { return this._createTime }
     get bytesRecorded() { return this._bytesRecorded }
     get duration() { return this._durationRecorded }
+    get ffmpegOptSS() { return this._ffmpegOptSS}
+    get ffmpegOptTO() { return this._ffmpegOptTO}
     get rStream() { return this._rStream }
     get wStream() { return this._wStream }
     get command() { return this._command }
@@ -167,10 +173,14 @@ class RecoderHLS extends EventEmitter {
         }
         this.isPreparing = true;
         this.log.info(`start encoding.... ${this.src}`);
+        const ssAddedOptions = this.ffmpegOptSS === null ? [...inputOptions]
+                              : [...inputOptions, '-ss', this.ffmpegOptSS];
+        const toAddedOptions = this.ffmpegOptTO === null ? [...ssAddedOptions]
+                              :[...ssAddedOptions, '-to', this.ffmpegOptTO];
         try {
             // if file path contains back slash, ffmpeg fails. replace!
             const srcNormalized = this._src.replace(/\\/g, '/');
-            this.command = ffmpeg(srcNormalized).inputOptions(inputOptions);
+            this.command = ffmpeg(srcNormalized).inputOptions(toAddedOptions);
             if(typeof(this._target) === 'string'){
                 this.command = this.command.output(this._target).outputOptions(outputOptions);
             } else {

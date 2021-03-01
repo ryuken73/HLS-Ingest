@@ -11,12 +11,13 @@ function TimePointer(props) {
         recorderStatus="stopped", 
         inTransition=false,
         startTime=0,
-        endTime=100,
+        stopTime=100,
         bgColors={},
-        timeInputDisable=false
+        timeInputDisabled=false
     } = props;
-    const pointerName = `IN-OUT[${channelNumber}]`
-    const bgColor = bgColors[recorderStatus];
+    const pointerName = `In-Out [${channelNumber}]`
+    const bgColor = bgColors['stopped'];
+    const textColor = timeInputDisabled ? 'darkslategrey' : 'white';
     const channel = {
         subject: <Box ml={"3px"}><Typography variant="body1">{pointerName}</Typography></Box>,
         content: (
@@ -32,10 +33,12 @@ function TimePointer(props) {
                         bgcolor={bgColor}
                         value={startTime}
                         fontSize={"20px"}
-                        disabled={timeInputDisable}
+                        disabled={timeInputDisabled}
                         mt={"1px"}
                         mb={"1px"}
                         ml={"10px"}
+                        height={"90%"}
+                        textColor={textColor}
                     ></SmallMarginTextField> 
                 </Box>
                 <Box display="flex" width="100%" m="0px" alignItems="center">
@@ -47,12 +50,14 @@ function TimePointer(props) {
                         variant="outlined"
                         margin="dense"
                         bgcolor={bgColor}
-                        value={endTime}
+                        value={stopTime}
                         fontSize={"20px"}
-                        disabled={timeInputDisable}
+                        disabled={timeInputDisabled}
                         mt={"1px"}
                         mb={"1px"}
                         ml={"10px"}
+                        height={"90%"}
+                        textColor={textColor}
                     ></SmallMarginTextField> 
                 </Box>
             </Box>
