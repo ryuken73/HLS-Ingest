@@ -1,5 +1,6 @@
 import {createAction, handleActions} from 'redux-actions';
 // import {logInfo, logError, logFail} from './messagePanel';
+import {setRecorderStartTimeSeconds, setRecorderStopTimeSeconds} from './hlsRecorders';
 const cctvFromConfig = require('../lib/getCCTVList');
 const {getDefaultConfig} = require('../lib/getConfig');
 const sources = cctvFromConfig();
@@ -50,6 +51,14 @@ export const setPlayerSource = createAction(SET_PLAYER_SOURCE);
 export const setPlayerSeeked = createAction(SET_PLAYER_SEEKED);
 export const refreshPlayer = createAction(REFRESH_PLAYER);
 
+import log from 'electron-log';
+const createLogger = channelName => {
+    return {
+        info: msg => {log.info(`[${channelName}][ChannelControl]${msg}`)},
+        error: msg => {log.error(`[${channelName}][ChannelControl]${msg}`)}
+    }
+}
+
 // redux thunk
 export const changePlayerSource = ({channelNumber, source, sourceType}) => (dispatch, getState) => {
     const state = getState();
@@ -58,6 +67,27 @@ export const changePlayerSource = ({channelNumber, source, sourceType}) => (disp
         return;
     } 
     dispatch(setPlayerSource({channelNumber, source}))
+}
+
+const getChanneler = (state, channelNumber) => {
+    const {recorders} = state.hlsRecorders;
+    const hlsRecorder = recorders.get(channelNumber);
+    const {channelName} = hlsRecorder;
+    const channelLog = createLogger(hlsRecorder.channelName)
+    return [hlsRecorder, channelLog]
+}
+
+export const setStartNStopPoint = ({channelNumber, seeked}) => (dispatch, getState)  => {
+    const state = getState();
+    const [hlsRecorder, channelLog] = getChanneler(state, channelNumber);
+    const {startTimeSeconds, stopTimeSeconds} = hlsRecorder;
+    if(hlsRecorder.startTimeFocused && stopTimeSeconds > seeked) {
+        dispatch(setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:seeked}));
+    }
+    if(hlsRecorder.stopTimeFocused && startTimeSeconds < seeked) {
+        dispatch(setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:seeked}));
+    }
+    dispatch(setPlayerSeeked({channelNumber, seeked}));
 }
 
 const initialState = {

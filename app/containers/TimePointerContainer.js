@@ -4,9 +4,11 @@ import TimePointer from '../components/HLSIngester/TimePointer';
 import * as hlsRecorderActions from '../modules/hlsRecorders';
 
 const secondsToTime = seconds => {
-  if(seconds === null){
+  if(typeof(seconds) !== 'number' || seconds === Infinity){
+    // console.error('^^^type of seconds is not number:', seconds, typeof(seconds));
     return '00:00:00'
   }
+  // console.log('^^^type of seconds is number..but:', seconds, typeof(seconds));
   return new Date(seconds*1000).toISOString().substr(11,8)
 }
 
@@ -18,9 +20,8 @@ function mapStateToProps(state, ownProps) {
   const {startTimeSeconds, stopTimeSeconds, inTransition, recorderStatus} = hlsRecorder;
   const {seeked} = hlsPlayer;
 
-  const {channelActiveSource} = state.activeSources;
+  const {channelActiveSource} = state.activeSources; 
   const activeSource = channelActiveSource.get(channelNumber);
-
   const timeInputDisabled = inTransition || recorderStatus === 'started' || activeSource === 'live';
 
   return {

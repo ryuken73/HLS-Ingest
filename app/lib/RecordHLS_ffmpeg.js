@@ -45,7 +45,8 @@ class RecoderHLS extends EventEmitter {
             ffmpegBinary='./ffmpeg.exe',
             renameDoneFile=false,
             startTimeSeconds=0,
-            stopTimeSeconds=null
+            stopTimeSeconds=null,
+            activeSource=''
         } = options;
         this._name = name;
         this._src = src;
@@ -56,6 +57,7 @@ class RecoderHLS extends EventEmitter {
         this._renameDoneFile = renameDoneFile;
         this._ffmpegOptSS = startTimeSeconds;
         this._ffmpegOptTO = stopTimeSeconds;
+        this._activeSource = activeSource;
 
         ffmpeg.setFfmpegPath(this._ffmpegBinary);
         this.log = (() => {
@@ -95,6 +97,7 @@ class RecoderHLS extends EventEmitter {
     get duration() { return this._durationRecorded }
     get ffmpegOptSS() { return this._ffmpegOptSS}
     get ffmpegOptTO() { return this._ffmpegOptTO}
+    get activeSource() { return this._activeSource}
     get rStream() { return this._rStream }
     get wStream() { return this._wStream }
     get command() { return this._command }
@@ -123,6 +126,7 @@ class RecoderHLS extends EventEmitter {
     set bytesRecorded(bytes) { this._bytesRecorded = bytes }
     set ffmpegOptSS(startTimme) { this._ffmpegOptSS = startTimme }
     set ffmpegOptTO(stopTime) { this._ffmpegOptTO = stopTime }
+    set activeSource(source) { return this._activeSource = source}
     set duration(duration) { 
         this._durationRecorded = duration;
         // this.emit('progress', {
@@ -175,9 +179,9 @@ class RecoderHLS extends EventEmitter {
         }
         this.isPreparing = true;
         this.log.info(`start encoding.... ${this.src}`);
-        const ssAddedOptions = this.ffmpegOptSS === null ? [...inputOptions]
+        const ssAddedOptions = this.activeSource === 'live' ? [...inputOptions]
                               : [...inputOptions, '-ss', this.ffmpegOptSS];
-        const toAddedOptions = this.ffmpegOptTO === null ? [...ssAddedOptions]
+        const toAddedOptions = this.activeSource === 'live' ? [...ssAddedOptions]
                               :[...ssAddedOptions, '-to', this.ffmpegOptTO];
         try {
             // if file path contains back slash, ffmpeg fails. replace!

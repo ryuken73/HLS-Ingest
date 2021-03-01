@@ -29,7 +29,8 @@ const HLSPlayer = (props) => {
     } = props;
     
     const {
-        setPlayerSeeked
+        setPlayerSeeked,
+        setStartNStopPoint
     } = props.HLSPlayersActions;
 
     const {
@@ -103,7 +104,8 @@ const HLSPlayer = (props) => {
 
     const onVideoSeeked =  React.useCallback((from, to) => {
         channelLog.info(`Video seeked from ${from} to ${to}`);
-        setPlayerSeeked({channelNumber, seeked:to})
+        // setPlayerSeeked({channelNumber, seeked:to})
+        setStartNStopPoint({channelNumber, seeked:to})
     },[])
 
     const onVideoError = React.useCallback((error) => {
@@ -118,8 +120,8 @@ const HLSPlayer = (props) => {
     },[])
     const onVideoCanPlay = player => {
         channelLog.info('can play');
-        setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
-        setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:player.duration()});
+        // setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
+        // setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:player.duration()});
         if(restorePlaybackRate && player){
             const playbackRate = getPlaybackRateStore();
             player.playbackRate(playbackRate);
@@ -128,7 +130,7 @@ const HLSPlayer = (props) => {
 
     let refreshTimer = null;
 
-    const onVideoOtherEvent = eventName => {
+    const onVideoOtherEvent = (eventName, player) => {
         // channelLog.debug(`event occurred: ${eventName}`)
         if(eventName === 'abort' && enableAutoRefresh !== null){
             refreshTimer = setInterval(() => {
@@ -155,6 +157,11 @@ const HLSPlayer = (props) => {
             if(player.readyState() === 0) return;
             const currentPlaybackRate = player.playbackRate();
             setPlaybackRateStore(currentPlaybackRate);
+        }
+        if(eventName === 'loadedmetadata'){
+            setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
+            const duration = player.duration();
+            typeof(duration) === 'number' && setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:duration});
         }
     }
 

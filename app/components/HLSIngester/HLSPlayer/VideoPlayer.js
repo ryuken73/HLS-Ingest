@@ -127,7 +127,11 @@ class VideoPlayer extends Component {
             props.onOtherEvent('emptied')
         })
         this.player.on('ratechange', () => {
-            props.onOtherEvent('ratechange');
+            props.onOtherEvent('ratechange', this.player);
+        })
+        this.player.on('loadedmetadata', () => {
+            console.log('%%% loadedmetadata')
+            props.onOtherEvent('loadedmetadata', this.player);
         })
         this.player.on('durationchange', () => {
             // console.log('#####', this.player.duration())

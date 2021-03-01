@@ -15,6 +15,18 @@ function TimePointer(props) {
         bgColors={},
         timeInputDisabled=false
     } = props;
+    const {
+        setTimeInputFocused
+    } = props.HLSRecorderActions;
+    const setFocused = React.useCallback( (type, focused) => {
+        return event => {
+            setTimeInputFocused({
+                channelNumber,
+                type,
+                focused
+            })
+        }
+    })
     const pointerName = `In-Out [${channelNumber}]`
     const bgColor = bgColors['stopped'];
     const textColor = timeInputDisabled ? 'darkslategrey' : 'white';
@@ -39,6 +51,8 @@ function TimePointer(props) {
                         ml={"10px"}
                         height={"90%"}
                         textColor={textColor}
+                        onFocus={setFocused('startTimeFocused', true)}
+                        onBlur={setFocused('startTimeFocused', false)}
                     ></SmallMarginTextField> 
                 </Box>
                 <Box display="flex" width="100%" m="0px" alignItems="center">
@@ -58,6 +72,8 @@ function TimePointer(props) {
                         ml={"10px"}
                         height={"90%"}
                         textColor={textColor}
+                        onFocus={setFocused('stopTimeFocused', true)}
+                        onBlur={setFocused('stopTimeFocused', false)}
                     ></SmallMarginTextField> 
                 </Box>
             </Box>

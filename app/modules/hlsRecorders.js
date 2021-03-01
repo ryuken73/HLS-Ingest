@@ -30,7 +30,9 @@ for(let channelNumber=1 ; channelNumber<=NUMBER_OF_CHANNELS ; channelNumber++){
         inTransition: false,
         recorderStatus: 'stopped',
         startTimeSeconds: null,
-        stopTimeSeconds: null
+        stopTimeSeconds: null,
+        startTimeFocused: false,
+        stopTimeFocused: false
     }
     recorders.set(channelNumber, hlsRecorder);
 }
@@ -42,6 +44,7 @@ const SET_RECORDER_STATUS = 'hlsRecorders/SET_RECORDER_STATUS';
 const SET_RECORDER_INTRANSITION = 'hlsRecorders/SET_RECORDER_INTRANSITION';
 const SET_RECORDER_START_TIME_SECONDS = 'hlsRecorders/SET_RECORDER_START_TIME_SECONDS';
 const SET_RECORDER_STOP_TIME_SECONDS = 'hlsRecorders/SET_RECORDER_STOP_TIME_SECONDS';
+const SET_TIME_INPUT_FOCUSED = 'hlsRecorders/SET_TIME_INPUT_FOCUSED';
 
 // action creator
 export const setDuration = createAction(SET_DURATION);
@@ -50,6 +53,8 @@ export const setRecorderStatus = createAction(SET_RECORDER_STATUS);
 export const setRecorderInTransition = createAction(SET_RECORDER_INTRANSITION);
 export const setRecorderStartTimeSeconds = createAction(SET_RECORDER_START_TIME_SECONDS);
 export const setRecorderStopTimeSeconds = createAction(SET_RECORDER_STOP_TIME_SECONDS);
+export const setTimeInputFocused = createAction(SET_TIME_INPUT_FOCUSED);
+
 
 import log from 'electron-log';
 const createLogger = channelName => {
@@ -180,6 +185,7 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
             recorder.src = source.url;
             recorder.ffmpegOptSS = startTimeSeconds;
             recorder.ffmpegOptTO = stopTimeSeconds;
+            recorder.activeSource = channelActiveSource;
             const remoteTarget = getIngestTarget(channelNumber);
             const localTarget = getLocalTarget(channelNumber);
             recorder.target = [remoteTarget, localTarget]
@@ -334,6 +340,18 @@ export default handleActions({
         const {channelNumber, stopTimeSeconds} = action.payload;
         const channelRecorder = {...state.recorders.get(channelNumber)};
         channelRecorder.stopTimeSeconds = stopTimeSeconds;
+        const recorders = new Map(state.recorders);
+        recorders.set(channelNumber, channelRecorder);
+        return {
+            ...state,
+            recorders
+        }
+    },
+    [SET_TIME_INPUT_FOCUSED]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {channelNumber, type, focused} = action.payload;
+        const channelRecorder = {...state.recorders.get(channelNumber)};
+        channelRecorder[type] = focused;
         const recorders = new Map(state.recorders);
         recorders.set(channelNumber, channelRecorder);
         return {
