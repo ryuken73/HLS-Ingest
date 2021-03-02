@@ -47,7 +47,7 @@ export const setCurrentSources = createAction(SET_CURRENT_SOURCES);
 export const limitSources = (channelNumber, selectedArea) => (dispatch, getState) => {
     const state = getState();
     const {baseSources} = state.liveSelector;
-    if(selectedArea === null){
+    if(selectedArea === null || selectedArea.title === '전체'){
         dispatch(setCurrentSources({channelNumber, channelSources:[...baseSources]}));
         return
     }
@@ -56,7 +56,7 @@ export const limitSources = (channelNumber, selectedArea) => (dispatch, getState
 }
 
 const initialState = {
-    areas: uniqAreas,
+    areas: [{title: '전체'}, ...uniqAreas],
     baseSources,
     currentSource,
     currentSources

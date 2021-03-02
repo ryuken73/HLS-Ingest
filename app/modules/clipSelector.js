@@ -1,3 +1,4 @@
+import { SelectAll } from '@material-ui/icons';
 import {createAction, handleActions} from 'redux-actions';
 
 // initialize hours from config
@@ -85,7 +86,7 @@ export const limitSources = (channelNumber, selectedArea) => (dispatch, getState
     console.log('###limitSources', channelNumber, selectedArea)
     const state = getState();
     const {baseClips} = state.clipSelector;
-    if(selectedArea === null){
+    if(selectedArea === null || selectedArea === '전체'){
         dispatch(setCurrentClips({channelNumber, channelClips:[...baseClips]}));
         return
     }
@@ -95,7 +96,7 @@ export const limitSources = (channelNumber, selectedArea) => (dispatch, getState
 }
 
 const initialState = {
-    areas: uniqAreas,
+    areas: [{title: '전체'}, ...uniqAreas],
     baseClips,
     currentClip,
     currentClips,
