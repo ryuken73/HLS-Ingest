@@ -86,7 +86,7 @@ export const limitSources = (channelNumber, selectedArea) => (dispatch, getState
     console.log('###limitSources', channelNumber, selectedArea)
     const state = getState();
     const {baseClips} = state.clipSelector;
-    if(selectedArea === null || selectedArea === '전체'){
+    if(selectedArea === null || selectedArea.title === '전체'){
         dispatch(setCurrentClips({channelNumber, channelClips:[...baseClips]}));
         return
     }
