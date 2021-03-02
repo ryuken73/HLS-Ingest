@@ -12,6 +12,7 @@ function ClipSelector(props) {
         hours=[],
         areas=[],
         clips=[],
+        currentClip={},
         active=true,
         disabled=false,
         diableSourceSelector=false,
@@ -32,6 +33,7 @@ function ClipSelector(props) {
 
     const handleChange = (event) => {
         setChannelActiveSource({channelNumber, sourceFrom: 'clip'});
+        changePlayerSource({channelNumber, source:currentClip, sourceType:'clip'})
     };
     const handleChangeArea = (event, value) => {
         limitSources(channelNumber, value)
