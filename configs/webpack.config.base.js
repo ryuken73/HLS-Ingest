@@ -18,6 +18,7 @@ function filterDepWithoutEntryPoints(dep: string): boolean {
     ) {
       return false;
     }
+    // console.log(dep)
     const pgkString = fs
       .readFileSync(require.resolve(`${dep}/package`))
       .toString();
