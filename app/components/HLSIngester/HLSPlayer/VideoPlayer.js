@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Controls from './Controls.json';
-import videojs from 'video.js';
+// import videojs from 'video.js';
 import overlay from 'videojs-overlay';
+import marker from 'videojs-markers-plugin'
 
 class VideoPlayer extends Component {
     playerId = `video-player-${Date.now() + (Math.random()*10000).toFixed(0)}`
@@ -40,9 +41,21 @@ class VideoPlayer extends Component {
                     }
                 )
             }
+            // setInterval(() => {
+            //     this.player.markers({
+            //         markers: [
+            //            {time: 9.5, text: "this"},
+            //            {time: 16,  text: "is"},
+            //            {time: 23.6,text: "so"},
+            //            {time: 28,  text: "cool"}
+            //         ]
+            //       });
+            // },5000)
+
             this.player.src(props.src)
             this.player.poster(props.poster)
             this.set_controls_visibility(this.player, props.hideControls);
+
         } catch(error) {
             console.error(error)
         }
@@ -130,8 +143,32 @@ class VideoPlayer extends Component {
             props.onOtherEvent('ratechange', this.player);
         })
         this.player.on('loadedmetadata', () => {
-            console.log('%%% loadedmetadata')
+            console.log('%%% loadedmetadata', this.player.markers)
+            // console.log('%%% loadedmetadata', this.player.overlay)
+            // this.player.markers.add([{ time: 40, text: "I'm added"}]);
             props.onOtherEvent('loadedmetadata', this.player);
+            this.player.markers({
+                markers: [
+                   {
+                      time: 9.5,
+                      text: "put"
+                   },
+                   {
+                      time: 16,
+                      text: "any"
+                   },
+                   {
+                      time: 23.6,
+                      text: "text"
+                   },
+                   {
+                      time: 120,
+                      text: "here"
+                   }
+                ]
+            });
+            this.player.markers.add([{ time: 360, text: "I'm added"}])
+            
         })
         this.player.on('durationchange', () => {
             // console.log('#####', this.player.duration())

@@ -305,6 +305,7 @@
     "source-map-support": "^0.5.16",
     "styled-components": "^5.1.1",
     "video.js": "^7.10.2",
+    "videojs-markers-plugin": "^1.0.2",
     "videojs-overlay": "^2.1.4"
   },
   "devEngines": {

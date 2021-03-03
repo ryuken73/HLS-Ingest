@@ -16021,6 +16021,11 @@ videojs-font@3.2.0:
   resolved "https://registry.yarnpkg.com/videojs-font/-/videojs-font-3.2.0.tgz#212c9d3f4e4ec3fa7345167d64316add35e92232"
   integrity sha512-g8vHMKK2/JGorSfqAZQUmYYNnXmfec4MLhwtEFS+mMs2IDY398GLysy6BH6K+aS1KMNu/xWZ8Sue/X/mdQPliA==
 
+videojs-markers-plugin@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/videojs-markers-plugin/-/videojs-markers-plugin-1.0.2.tgz#7e40da152504a0f1be0ee1cf608c7dccc4abf8b3"
+  integrity sha512-yxUp6hT0Czx7i7MMMxcqExhOcDp48vkJUMJccnb1XhUqc52gbnVipP10g2XG0ZDkJ2WBXKQw49JI+pZXZUkwPg==
+
 videojs-overlay@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/videojs-overlay/-/videojs-overlay-2.1.4.tgz#5a103b25374dbb753eb87960d8360c2e8f39cc05"
