@@ -18,8 +18,17 @@ function TimePointer(props) {
     const {
         setTimeInputFocused
     } = props.HLSRecorderActions;
+    const [bgColorIn, setBgColorIn] = React.useState(bgColors['stopped']);
+    const [bgColorOut, setBgColorOut] = React.useState(bgColors['stopped']);
+    const setBgColorMap = {
+        'startTimeFocused': setBgColorIn,
+        'stopTimeFocused': setBgColorOut
+    }
+
     const setFocused = React.useCallback( (type, focused) => {
         return event => {
+            if(focused === true) setBgColorMap[type]('darkblue');
+            if(focused === false) setBgColorMap[type](bgColors['stopped']);
             setTimeInputFocused({
                 channelNumber,
                 type,
@@ -28,7 +37,7 @@ function TimePointer(props) {
         }
     })
     const pointerName = `In-Out [${channelNumber}]`
-    const bgColor = bgColors['stopped'];
+    // const bgColor = bgColors['stopped'];
     const textColor = timeInputDisabled ? 'darkslategrey' : 'white';
     const channel = {
         subject: <Box ml={"3px"}><Typography variant="body1">{pointerName}</Typography></Box>,
@@ -42,7 +51,7 @@ function TimePointer(props) {
                         width="163px"
                         variant="outlined"
                         margin="dense"
-                        bgcolor={bgColor}
+                        bgcolor={bgColorIn}
                         value={startTime}
                         fontSize={"20px"}
                         disabled={timeInputDisabled}
@@ -63,7 +72,7 @@ function TimePointer(props) {
                         width="162px"
                         variant="outlined"
                         margin="dense"
-                        bgcolor={bgColor}
+                        bgcolor={bgColorOut}
                         value={stopTime}
                         fontSize={"20px"}
                         disabled={timeInputDisabled}
