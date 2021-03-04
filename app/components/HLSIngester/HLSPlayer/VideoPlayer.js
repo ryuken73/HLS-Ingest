@@ -148,26 +148,38 @@ class VideoPlayer extends Component {
             // this.player.markers.add([{ time: 40, text: "I'm added"}]);
             props.onOtherEvent('loadedmetadata', this.player);
             this.player.markers({
-                markers: [
-                   {
-                      time: 9.5,
-                      text: "put"
-                   },
-                   {
-                      time: 16,
-                      text: "any"
-                   },
-                   {
-                      time: 23.6,
-                      text: "text"
-                   },
-                   {
-                      time: 120,
-                      text: "here"
-                   }
-                ]
+                // markerStyle: {
+                //     'width':'7px',
+                //     'border-radius': '30%',
+                //     'background-color': 'red'
+                // },
+                // markerTip:{
+                //     display: true,
+                //     text: function(marker) {
+                //     return "Break: "+ marker.text;
+                //     },
+                //     time: function(marker) {
+                //     return marker.time;
+                //     }
+                // },
+                // breakOverlay:{
+                //     display: true,
+                //     displayTime: 3,
+                //     style:{
+                //     'width':'100%',
+                //     'height': '20%',
+                //     'background-color': 'rgba(0,0,0,0.7)',
+                //     'color': 'white',
+                //     'font-size': '17px'
+                //     },
+                //     text: function(marker) {
+                //     return "Break overlay: " + marker.overlayText;
+                //     }
+                // },
+                // onMarkerClick: function(marker) {},
+                // onMarkerReached: function(marker) {},
             });
-            this.player.markers.add([{ time: 360, text: "I'm added"}])
+            // this.player.markers.add([{ time: 500, text: "I'm added"}])
             
         })
         this.player.on('durationchange', () => {

@@ -72,19 +72,40 @@ export const changePlayerSource = ({channelNumber, source, sourceType}) => (disp
 const getChanneler = (state, channelNumber) => {
     const {recorders} = state.hlsRecorders;
     const hlsRecorder = recorders.get(channelNumber);
+    const {players} = state.hlsPlayers;
+    const hlsPlayer = players.get(channelNumber);
+    console.log('### marker:', players, hlsPlayer)
     const {channelName} = hlsRecorder;
     const channelLog = createLogger(hlsRecorder.channelName)
-    return [hlsRecorder, channelLog]
+    return [hlsRecorder, hlsPlayer, channelLog]
+}
+
+const addMarkerIn = (player, prevStartTimeSeconds, markers, seeked) => {
+    (markers.length === 2) && player.markers.remove([0]);
+    (markers.length === 1 && markers[0].time === prevStartTimeSeconds) && player.markers.remove([0]);
+    player.markers.add([{time: seeked, text: "In", ovarlayText: "In"}]);
+    return;
+}
+
+const addMarkerOut = (player, prevStopTimeSeconds, markers, seeked) => {
+    (markers.length === 2) && player.markers.remove([1]);
+    (markers.length === 1 && markers[0].time === prevStopTimeSeconds) && player.markers.remove([0]);
+    player.markers.add([{time: seeked, text: "Out", ovarlayText: "Out"}]);
+    return;
 }
 
 export const setStartNStopPoint = ({channelNumber, seeked}) => (dispatch, getState)  => {
     const state = getState();
-    const [hlsRecorder, channelLog] = getChanneler(state, channelNumber);
+    const [hlsRecorder, hlsPlayer, channelLog] = getChanneler(state, channelNumber);
     const {startTimeSeconds, stopTimeSeconds} = hlsRecorder;
+    const {player} = hlsPlayer;
+    const markers = hlsPlayer.player.markers.getMarkers();
     if(hlsRecorder.startTimeFocused && stopTimeSeconds > seeked) {
+        addMarkerIn(player, startTimeSeconds, markers, seeked)
         dispatch(setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:seeked}));
     }
     if(hlsRecorder.stopTimeFocused && startTimeSeconds < seeked) {
+        addMarkerOut(player, stopTimeSeconds, markers, seeked)
         dispatch(setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:seeked}));
     }
     dispatch(setPlayerSeeked({channelNumber, seeked}));

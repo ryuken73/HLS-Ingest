@@ -29,6 +29,8 @@ const HLSPlayer = (props) => {
     } = props;
     
     const {
+        setPlayer,
+        refreshPlayer,
         setPlayerSeeked,
         setStartNStopPoint
     } = props.HLSPlayersActions;
@@ -42,10 +44,10 @@ const HLSPlayer = (props) => {
     const width=600;
     const height=340; 
 
-    const {
-        setPlayer=()=>{},
-        refreshPlayer=()=>{}
-    } = props;
+    // const {
+    //     setPlayer=()=>{},
+    //     refreshPlayer=()=>{}
+    // } = props;
 
     const srcObject = {
         src: source.url,
@@ -77,6 +79,7 @@ const HLSPlayer = (props) => {
 
     const onPlayerReady = player => {
         channelLog.info("Player is ready");
+        console.log(player)
         setPlayer({channelNumber, player});
         if(restorePlaybackRate && player){
             const playbackRate = getPlaybackRateStore();
