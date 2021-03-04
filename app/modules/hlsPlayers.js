@@ -60,12 +60,25 @@ const createLogger = channelName => {
 }
 
 // redux thunk
+const removeAllMarker = player => {
+    if(player.markers){
+        try{
+            player.markers.removeAll();
+        } catch (err) {
+            console.log('makers not initialized!')
+        }
+    }
+}
+
 export const changePlayerSource = ({channelNumber, source, sourceType}) => (dispatch, getState) => {
     const state = getState();
     const activeSource = state.activeSources.channelActiveSource.get(channelNumber);
     if(activeSource !== sourceType){
         return;
     } 
+    const [hlsRecorder, hlsPlayer, channelLog] = getChanneler(state, channelNumber); 
+    const {player} = hlsPlayer;
+    removeAllMarker(player);
     dispatch(setPlayerSource({channelNumber, source}))
 }
 
