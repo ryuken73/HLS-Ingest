@@ -142,7 +142,7 @@ const HLSPlayer = (props) => {
         if(eventName === 'durationchange'){
             setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
             const duration = player.duration();
-            isValidStopDuration() && setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:duration});
+            isValidStopDuration(duration) && setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:duration});
         }
         if(eventName === 'abort' && enableAutoRefresh !== null){
             refreshTimer = setInterval(() => {
