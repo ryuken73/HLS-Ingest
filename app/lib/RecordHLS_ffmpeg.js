@@ -45,9 +45,7 @@ class RecoderHLS extends EventEmitter {
             enablePlayback=false, 
             ffmpegBinary='./ffmpeg.exe',
             renameDoneFile=false,
-            startTimeSeconds=0,
-            stopTimeSeconds=0,
-            activeSource=''
+            // activeSource=''
         } = options;
         this._name = name;
         this._src = src;
@@ -56,9 +54,6 @@ class RecoderHLS extends EventEmitter {
         this._enablePlayback = enablePlayback;
         this._ffmpegBinary = ffmpegBinary;
         this._renameDoneFile = renameDoneFile;
-        this._ffmpegOptSS = startTimeSeconds;
-        this._ffmpegOptTO = stopTimeSeconds;
-        this._activeSource = activeSource;
         this._killTimer = null;
         this._exitByTimeout = false;
         this._command = null;
@@ -103,9 +98,6 @@ class RecoderHLS extends EventEmitter {
     get createTime() { return this._createTime }
     get bytesRecorded() { return this._bytesRecorded }
     get duration() { return this._durationRecorded }
-    get ffmpegOptSS() { return this._ffmpegOptSS}
-    get ffmpegOptTO() { return this._ffmpegOptTO}
-    get activeSource() { return this._activeSource}
     get rStream() { return this._rStream }
     get wStream() { return this._wStream }
     get command() { return this._command }
@@ -134,9 +126,6 @@ class RecoderHLS extends EventEmitter {
     set rStream(stream) { this._rStream = stream }
     set wStream(stream) { this._wStream = stream }
     set bytesRecorded(bytes) { this._bytesRecorded = bytes }
-    set ffmpegOptSS(startTimme) { this._ffmpegOptSS = startTimme }
-    set ffmpegOptTO(stopTime) { this._ffmpegOptTO = stopTime }
-    set activeSource(source) { return this._activeSource = source}
     set duration(duration) { 
         this._durationRecorded = duration;
         // this.emit('progress', {
@@ -188,23 +177,26 @@ class RecoderHLS extends EventEmitter {
         // }
     }
 
-    start = () => {
+    start = (props) => {
+        const {
+            inputOpts=[],
+            outputOpts=[]
+        } = props
+        const inputOptsMerged = [...inputOptions, ...inputOpts];
+        const outputOptsMerged = [...outputOptions, ...outputOpts];
         if(this.isBusy) {
             this.log.warn('already started!. stop first');
             throw new Error('already started!. stop first')
         }
         this.isPreparing = true;
         this.log.info(`start encoding.... ${this.src}, type: ${this.activeSource}`);
-        const ssAddedOptions = this.activeSource === 'live' ? [...inputOptions]
-                              : [...inputOptions, '-ss', this.ffmpegOptSS];
-        const toAddedOptions = this.activeSource === 'live' ? [...ssAddedOptions]
-                              :[...ssAddedOptions, '-to', this.ffmpegOptTO];
+
         try {
             // if file path contains back slash, ffmpeg fails. replace!
             const srcNormalized = this._src.replace(/\\/g, '/');
-            this.command = ffmpeg(srcNormalized).inputOptions(toAddedOptions);
+            this.command = ffmpeg(srcNormalized).inputOptions(inputOptsMerged);
             if(typeof(this._target) === 'string'){
-                this.command = this.command.output(this._target).outputOptions(outputOptions);
+                this.command = this.command.output(this._target).outputOptions(outputOptsMerged);
             } else {
                 for(let i=0; i < this._target.length ;i++){
                     this.command = this.command.output(this._target[i]).outputOptions(outputOptions);

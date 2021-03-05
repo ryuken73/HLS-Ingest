@@ -182,9 +182,9 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
             channelLog.info(`start startRecroding() recorder.createTime:${recorder.createTime}`)
         
             recorder.src = source.url;
-            recorder.ffmpegOptSS = startTimeSeconds;
-            recorder.ffmpegOptTO = stopTimeSeconds;
-            recorder.activeSource = channelActiveSource;
+            // recorder.ffmpegOptSS = startTimeSeconds;
+            // recorder.ffmpegOptTO = stopTimeSeconds;
+            // recorder.activeSource = channelActiveSource;
             const remoteTarget = getIngestTarget(channelNumber);
             const localTarget = getLocalTarget(channelNumber);
             recorder.target = [remoteTarget, localTarget]
@@ -225,8 +225,9 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
                     }
                 }
             })
-        
-            recorder.start();
+            const ffmpegInputOptions = (channelActiveSource === 'live' || stopTimeSeconds === 0) ? 
+                                       [] : ['-ss', startTimeSeconds, '-to', stopTimeSeconds];
+            recorder.start({inputOpts:ffmpegInputOptions});
         } catch (error) {
             console.log('eeee: error when startRecording')
             dispatch(refreshRecorder({channelNumber}));
