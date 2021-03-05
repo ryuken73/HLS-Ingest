@@ -96,10 +96,8 @@ export const createRecorder = (channelNumber, createdByError=false) => (dispatch
 
     const startHandler = cmd => {
         channelLog.info(`recorder emitted start : ${cmd}`)
-        setTimeout(() => {
-            dispatch(setRecorderStatus({channelNumber, recorderStatus: 'started'}));
-            dispatch(setRecorderInTransition({channelNumber, inTransition:false}));
-        },1000);
+        dispatch(setRecorderStatus({channelNumber, recorderStatus: 'started'}));
+        dispatch(setRecorderInTransition({channelNumber, inTransition:false}));
     }
     const progressHandler = progress => {
         console.log(progress)

@@ -34,6 +34,7 @@ const successiveEvent = (checkFunction,logger=console) => {
     }
 }
 
+const FFMPEG_QUIT_TIMEOUT = 3000
 class RecoderHLS extends EventEmitter {
     constructor(options){
         super();
@@ -45,7 +46,7 @@ class RecoderHLS extends EventEmitter {
             ffmpegBinary='./ffmpeg.exe',
             renameDoneFile=false,
             startTimeSeconds=0,
-            stopTimeSeconds=null,
+            stopTimeSeconds=0,
             activeSource=''
         } = options;
         this._name = name;
@@ -58,6 +59,9 @@ class RecoderHLS extends EventEmitter {
         this._ffmpegOptSS = startTimeSeconds;
         this._ffmpegOptTO = stopTimeSeconds;
         this._activeSource = activeSource;
+        this._killTimer = null;
+        this._exitByTimeout = false;
+        this._command = null;
 
         ffmpeg.setFfmpegPath(this._ffmpegBinary);
         this.log = (() => {
@@ -81,6 +85,10 @@ class RecoderHLS extends EventEmitter {
         this._durationRecorded = this.INITIAL_TIMEMARKER;
         this._startTime = null;
         this._rStream = null;
+        this._killTimer = null;
+        this._exitByTimeout = false;
+        // this._command = null;
+        this.command && this.command.removeListener('start', this.startHandler)
         this.log.info(`recoder initialized...`)
     }
 
@@ -101,6 +109,8 @@ class RecoderHLS extends EventEmitter {
     get rStream() { return this._rStream }
     get wStream() { return this._wStream }
     get command() { return this._command }
+    get killTimer() { return this._killTimer }
+    get exitByTimeout() { return this._exitByTimeout}
     get elapsed() { 
         const elapsedMS = Date.now() - this.startTime;
         return elapsedMS > 0 ? elapsedMS : 0;
@@ -134,15 +144,21 @@ class RecoderHLS extends EventEmitter {
         //     duration: this.duration
         // })
     };
+    set killTimer(timer) { this._killTimer = timer}
+    set exitByTimeout(bool) { this._exitByTimeout = bool}
 
     onFFMPEGEnd = (error) => {
         this.log.info(`ffmpeg ends! : ${this.target}`);
-        if(error){
+        clearTimeout(this.killTimer);
+        if(error && !this.exitByTimeout){
             this.log.error(`ended abnormally: startime =${this.startTime}:duration=${this.duration}`);
             this.initialize();            
             this.emit('error', error);
             this.emit('end', this.target, this.startTime, this.duration, error)
             return
+        }
+        if(this.exitByTimeout){
+            this.log.error(`ended by timeout!`)
         }
         this.log.info(`ended ${this.startTime}:${this.duration}`)
         this.emit('end', this.target, this.startTime, this.duration)
@@ -221,7 +237,15 @@ class RecoderHLS extends EventEmitter {
             return;
         }
         this.log.info(`stopping ffmpeg...`);
-        this.command.ffmpegProc.stdin.write('q');
+        // this.command.ffmpegProc.stdin.write('q');
+        this.command.ffmpegProc.stdin.write('q', () =>{
+            this.log.info(`write quit to ffmpeg's stdin done!`);
+            this.killTimer = setTimeout(() => {
+               this.log.info(`stopping ffmpeg takes too long. force stop!`);
+               this.exitByTimeout = true;
+               this.command.kill();
+            }, FFMPEG_QUIT_TIMEOUT)
+        })
     }
     destroy = () => {
         this.command && this.command.kill();
