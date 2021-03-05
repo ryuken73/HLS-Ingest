@@ -102,11 +102,8 @@ class VideoPlayer extends Component {
             props.onCanPlay(this.player)
         })
         this.player.on('seeking', () => {
-            this.player.off('timeupdate', () => { });
-            this.player.one('seeked', () => { });
             props.onSeeking(this.player.currentTime());
-        });
-
+        });   
         this.player.on('seeked', () => {
             let completeTime = Math.floor(this.player.currentTime());
             props.onSeeked(position, completeTime);
@@ -114,9 +111,9 @@ class VideoPlayer extends Component {
         this.player.on('ended', () => {
             props.onEnd();
         });
-        this.player.on('error', error => {
-            console.log(player.error());
-            props.onError(player.error());
+        this.player.on('error', () => {
+            console.log(this.player.error());
+            props.onError(this.player.error());
         });
         this.player.on('stalled', () => {
             props.onOtherEvent('stalled')
@@ -131,7 +128,8 @@ class VideoPlayer extends Component {
             props.onOtherEvent('abort')
         })
         this.player.on('loadstart', () => {
-            props.onOtherEvent('loadstart')
+            console.log('loadstart');
+            props.onOtherEvent('loadstart', this.player)
         })
         this.player.on('playing', () => {
             props.onOtherEvent('playing')
@@ -147,44 +145,49 @@ class VideoPlayer extends Component {
             // console.log('%%% loadedmetadata', this.player.overlay)
             // this.player.markers.add([{ time: 40, text: "I'm added"}]);
             props.onOtherEvent('loadedmetadata', this.player);
-            this.player.markers({
-                // markerStyle: {
-                //     'width':'7px',
-                //     'border-radius': '30%',
-                //     'background-color': 'red'
-                // },
-                // markerTip:{
-                //     display: true,
-                //     text: function(marker) {
-                //     return "Break: "+ marker.text;
-                //     },
-                //     time: function(marker) {
-                //     return marker.time;
-                //     }
-                // },
-                // breakOverlay:{
-                //     display: true,
-                //     displayTime: 3,
-                //     style:{
-                //     'width':'100%',
-                //     'height': '20%',
-                //     'background-color': 'rgba(0,0,0,0.7)',
-                //     'color': 'white',
-                //     'font-size': '17px'
-                //     },
-                //     text: function(marker) {
-                //     return "Break overlay: " + marker.overlayText;
-                //     }
-                // },
-                // onMarkerClick: function(marker) {},
-                // onMarkerReached: function(marker) {},
-            });
+            try {
+                this.player.markers({
+                    // markerStyle: {
+                    //     'width':'7px',
+                    //     'border-radius': '30%',
+                    //     'background-color': 'red'
+                    // },
+                    // markerTip:{
+                    //     display: true,
+                    //     text: function(marker) {
+                    //     return "Break: "+ marker.text;
+                    //     },
+                    //     time: function(marker) {
+                    //     return marker.time;
+                    //     }
+                    // },
+                    // breakOverlay:{
+                    //     display: true,
+                    //     displayTime: 3,
+                    //     style:{
+                    //     'width':'100%',
+                    //     'height': '20%',
+                    //     'background-color': 'rgba(0,0,0,0.7)',
+                    //     'color': 'white',
+                    //     'font-size': '17px'
+                    //     },
+                    //     text: function(marker) {
+                    //     return "Break overlay: " + marker.overlayText;
+                    //     }
+                    // },
+                    // onMarkerClick: function(marker) {},
+                    // onMarkerReached: function(marker) {},
+                });
+            } catch (err) {
+                console.log('error initialize markers')
+            }
+
             // this.player.markers.add([{ time: 500, text: "I'm added"}])
             
         })
         this.player.on('durationchange', () => {
-            // console.log('#####', this.player.duration())
-            props.onOtherEvent('durationchange', this.player.duration())
+            console.log('#####', this.player.duration())
+            props.onOtherEvent('durationchange', this.player)
         })
 
     }

@@ -141,7 +141,7 @@ class RecoderHLS extends EventEmitter {
             this.log.error(`ended abnormally: startime =${this.startTime}:duration=${this.duration}`);
             this.initialize();            
             this.emit('error', error);
-            this.emit('end', this.target, this.startTime, this.duration)
+            this.emit('end', this.target, this.startTime, this.duration, error)
             return
         }
         this.log.info(`ended ${this.startTime}:${this.duration}`)
@@ -178,7 +178,7 @@ class RecoderHLS extends EventEmitter {
             throw new Error('already started!. stop first')
         }
         this.isPreparing = true;
-        this.log.info(`start encoding.... ${this.src}`);
+        this.log.info(`start encoding.... ${this.src}, type: ${this.activeSource}`);
         const ssAddedOptions = this.activeSource === 'live' ? [...inputOptions]
                               : [...inputOptions, '-ss', this.ffmpegOptSS];
         const toAddedOptions = this.activeSource === 'live' ? [...ssAddedOptions]

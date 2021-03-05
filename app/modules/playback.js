@@ -49,7 +49,9 @@ export const destroyPlaybackProcess = props => (disptach, getState) => {
     const state = getState();
     const ffplay = state.playback.playbackProcesses.get(channelNumber);
     console.log('$$$ destroy ffplay:', ffplay)
-    ffplay.stop();
+    if(ffplay){
+        ffplay.stop();
+    }
 }
 
 // initial state

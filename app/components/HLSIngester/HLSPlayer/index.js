@@ -133,8 +133,17 @@ const HLSPlayer = (props) => {
 
     let refreshTimer = null;
 
+    const isValidStopDuration = duration => {
+        return typeof(duration) === 'number' && duration !== 0 && duration !== Infinity;
+    }
+
     const onVideoOtherEvent = (eventName, player) => {
         // channelLog.debug(`event occurred: ${eventName}`)
+        if(eventName === 'durationchange'){
+            setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
+            const duration = player.duration();
+            isValidStopDuration() && setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:duration});
+        }
         if(eventName === 'abort' && enableAutoRefresh !== null){
             refreshTimer = setInterval(() => {
                 channelLog.info('refresh player because of long buffering')
@@ -160,11 +169,6 @@ const HLSPlayer = (props) => {
             if(player.readyState() === 0) return;
             const currentPlaybackRate = player.playbackRate();
             setPlaybackRateStore(currentPlaybackRate);
-        }
-        if(eventName === 'loadedmetadata'){
-            setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
-            const duration = player.duration();
-            typeof(duration) === 'number' && setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:duration});
         }
     }
 

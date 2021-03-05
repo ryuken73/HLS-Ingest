@@ -29,8 +29,8 @@ for(let channelNumber=1 ; channelNumber<=NUMBER_OF_CHANNELS ; channelNumber++){
         recorder: null,
         inTransition: false,
         recorderStatus: 'stopped',
-        startTimeSeconds: null,
-        stopTimeSeconds: null,
+        startTimeSeconds: 0,
+        stopTimeSeconds: 0,
         startTimeFocused: false,
         stopTimeFocused: false
     }
@@ -132,6 +132,7 @@ export const createRecorder = (channelNumber, createdByError=false) => (dispatch
 // }
 
 export const refreshRecorder = ({channelNumber}) => (dispatch, getState) => {
+    console.log('&&&&& refreshRecorder:', channelNumber)
     const state = getState();
     const {recorders} = state.hlsRecorders;
     dispatch(setRecorderStatus({channelNumber, recorderStatus: 'stopped'}))
@@ -196,7 +197,7 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
                 console.log('$$$ recorder started!')
                 resolve();
             })
-            recorder.once('end', async (clipName, startTimestamp, duration) => {
+            recorder.once('end', async (clipName, startTimestamp, duration, error) => {
                 try {
                     channelLog.info(`recorder emitted end (listener1): ${clipName}`)
                     const endTimestamp = Date.now();
@@ -229,6 +230,8 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
         
             recorder.start();
         } catch (error) {
+            console.log('eeee: error when startRecording')
+            dispatch(refreshRecorder({channelNumber}));
             reject(error);
         }
     

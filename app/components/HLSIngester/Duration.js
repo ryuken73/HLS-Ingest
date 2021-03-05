@@ -5,7 +5,7 @@ import BorderedList from '../template/BorderedList';
 import {SmallMarginTextField, SmallButton}  from '../template/smallComponents';
 
 function Duration(props) {
-    // console.log('rerender Title:', props)
+    console.log('rerender Duration:', props)
     const {
         channelNumber="1", 
         recorderStatus="stopped", 

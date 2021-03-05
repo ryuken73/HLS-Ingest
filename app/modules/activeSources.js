@@ -29,8 +29,8 @@ const SET_CHANNEL_ACTIVE_SOURCE = 'activeSources/SET_CHANNEL_ACTIVE_SOURCE';
 const actionSetChannelActiveSource = createAction(SET_CHANNEL_ACTIVE_SOURCE);
 export const setChannelActiveSource = ({channelNumber, sourceFrom}) => (dispatch, getState) => {
     if(sourceFrom === 'live'){
-        dispatch(setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:null}))
-        dispatch(setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:null}))
+        dispatch(setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0}))
+        dispatch(setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:0}))
     }
     dispatch(actionSetChannelActiveSource({channelNumber, sourceFrom}))
 }
