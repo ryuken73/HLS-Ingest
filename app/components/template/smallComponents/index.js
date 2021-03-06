@@ -53,7 +53,13 @@ const SmallMarginTextField = styled(TextField)`
     }
     .MuiOutlinedInput-root {
         border-radius: 0px;
+        border-size: 0px;
     }    
+    .MuiOutlinedInput-root.Mui-focused {
+        .MuiOutlinedInput-notchedOutline{
+            border-style:none;
+        }
+    }
 `
 
 const SmallPaddingFormControlLabel = styled(FormControlLabel)`
