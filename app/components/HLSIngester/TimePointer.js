@@ -51,8 +51,9 @@ function TimePointer(props) {
         channelNumber="1", 
         recorderStatus="stopped", 
         inTransition=false,
-        startTime=0,
-        stopTime=100,
+        startTime="00:00:00.00",
+        stopTime="00:00:00.00",
+        durationTime="00:00:00.00",
         bgColors={},
         timeInputDisabled=false
     } = props;
@@ -80,6 +81,7 @@ function TimePointer(props) {
     const pointerName = `Set Time [${channelNumber}]`
     // const bgColor = bgColors['stopped'];
     const textColor = timeInputDisabled ? 'darkslategrey' : 'white';
+    const durationTextColor = timeInputDisabled ? 'darkslategrey' : 'yellow';
     const channel = {
         subject: <Box ml={"3px"}><Typography variant="body1">{pointerName}</Typography></Box>,
         content: (
@@ -108,8 +110,8 @@ function TimePointer(props) {
                     tTitle="DURATION"
                     iWidth="150px"
                     iBgColorIn={bgColors['stopped']}
-                    iValue={stopTime}
-                    iTextColor={textColor}
+                    iValue={durationTime}
+                    iTextColor={durationTextColor}
                     iDisabled={true}
                 >
                 </VerticalCell>
