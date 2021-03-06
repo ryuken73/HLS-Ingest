@@ -4,6 +4,47 @@ import Typography from '@material-ui/core/Typography';
 import BorderedList from '../template/BorderedList';
 import {SmallMarginTextField, SmallButton}  from '../template/smallComponents';
 
+const VerticalCell = (props) => {
+    const {
+        tTitle="title",
+        tProps={}, 
+        iWidth="163px",
+        iBgColorIn="white", 
+        iValue="input value", 
+        iFontSize="15px",
+        iTextColor="black", 
+        iOnFocus=()=>{}, 
+        iOnBlur=()=>{}, 
+        iProps={},
+        iDisabled=false
+    } = props
+
+    return (
+        <Box display="flex" flexDirection="column" width="100%" m="3px" alignItems="center">
+            <Box border>
+                <Typography style={{fontSize:"10px"}} {...tProps}>{tTitle}</Typography>
+            </Box>
+            <SmallMarginTextField 
+                width={iWidth}
+                variant="outlined"
+                margin="dense"
+                bgcolor={iBgColorIn}
+                value={iValue}
+                fontSize={iFontSize}
+                disabled={iDisabled}
+                mt={"1px"}
+                mb={"1px"}
+                ml={"10px"}
+                height={"90%"}
+                textColor={iTextColor}
+                onFocus={iOnFocus}
+                onBlur={iOnBlur}
+                {...iProps}
+            ></SmallMarginTextField> 
+        </Box>
+    )
+}
+
 function TimePointer(props) {
     // console.log('rerender Title:', props)
     const {
@@ -27,7 +68,7 @@ function TimePointer(props) {
 
     const setFocused = React.useCallback( (type, focused) => {
         return event => {
-            if(focused === true) setBgColorMap[type]('darkblue');
+            if(focused === true) setBgColorMap[type]('darkslategrey');
             if(focused === false) setBgColorMap[type](bgColors['stopped']);
             setTimeInputFocused({
                 channelNumber,
@@ -36,55 +77,42 @@ function TimePointer(props) {
             })
         }
     })
-    const pointerName = `In-Out [${channelNumber}]`
+    const pointerName = `Set Time [${channelNumber}]`
     // const bgColor = bgColors['stopped'];
     const textColor = timeInputDisabled ? 'darkslategrey' : 'white';
     const channel = {
         subject: <Box ml={"3px"}><Typography variant="body1">{pointerName}</Typography></Box>,
         content: (
             <Box display="flex" width="500px" m="0px"> 
-                <Box display="flex" width="100%" m="0px" alignItems="center">
-                    <Box width="80px">
-                        <Typography>In Time</Typography>
-                    </Box>
-                    <SmallMarginTextField 
-                        width="163px"
-                        variant="outlined"
-                        margin="dense"
-                        bgcolor={bgColorIn}
-                        value={startTime}
-                        fontSize={"20px"}
-                        disabled={timeInputDisabled}
-                        mt={"1px"}
-                        mb={"1px"}
-                        ml={"10px"}
-                        height={"90%"}
-                        textColor={textColor}
-                        onFocus={setFocused('startTimeFocused', true)}
-                        onBlur={setFocused('startTimeFocused', false)}
-                    ></SmallMarginTextField> 
-                </Box>
-                <Box display="flex" width="100%" m="0px" alignItems="center">
-                    <Box ml="20px" width="80px">
-                        <Typography>Out Time</Typography>
-                    </Box>
-                    <SmallMarginTextField 
-                        width="162px"
-                        variant="outlined"
-                        margin="dense"
-                        bgcolor={bgColorOut}
-                        value={stopTime}
-                        fontSize={"20px"}
-                        disabled={timeInputDisabled}
-                        mt={"1px"}
-                        mb={"1px"}
-                        ml={"10px"}
-                        height={"90%"}
-                        textColor={textColor}
-                        onFocus={setFocused('stopTimeFocused', true)}
-                        onBlur={setFocused('stopTimeFocused', false)}
-                    ></SmallMarginTextField> 
-                </Box>
+                <VerticalCell
+                    tTitle="IN"
+                    iBgColorIn={bgColorIn}
+                    iValue={startTime}
+                    iTextColor={textColor}
+                    iOnFocus={setFocused('startTimeFocused', true)}
+                    iOnBlur={setFocused('startTimeFocused', false)}
+                    iDisabled={timeInputDisabled}
+                >
+                </VerticalCell>
+                <VerticalCell
+                    tTitle="OUT"
+                    iBgColorIn={bgColorOut}
+                    iValue={stopTime}
+                    iTextColor={textColor}
+                    iOnFocus={setFocused('stopTimeFocused', true)}
+                    iOnBlur={setFocused('stopTimeFocused', false)}
+                    iDisabled={timeInputDisabled}
+                >
+                </VerticalCell>
+                <VerticalCell
+                    tTitle="DURATION"
+                    iWidth="150px"
+                    iBgColorIn={bgColors['stopped']}
+                    iValue={stopTime}
+                    iTextColor={textColor}
+                    iDisabled={true}
+                >
+                </VerticalCell>
             </Box>
         ) 
     }
