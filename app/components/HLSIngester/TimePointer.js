@@ -78,7 +78,8 @@ function TimePointer(props) {
             })
         }
     })
-    const pointerName = `Set Time [${channelNumber}]`
+    // const pointerName = `Set Time [${channelNumber}]`
+    const pointerName = `Set Time`
     // const bgColor = bgColors['stopped'];
     const textColor = timeInputDisabled ? 'darkslategrey' : 'white';
     const durationTextColor = timeInputDisabled ? 'darkslategrey' : 'yellow';

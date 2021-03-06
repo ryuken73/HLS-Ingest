@@ -11,9 +11,11 @@ function Duration(props) {
         recorderStatus="stopped", 
         inTransition=false,
         duration="00:00:00.00",
+        remains="00:00:00.00",
         bgColors={}
     } = props;
-    const channelName = `Ingest[${channelNumber}]`
+    // const channelName = `Ingest[${channelNumber}]`
+    const channelName = `Ingest`
     const bgColor = bgColors[recorderStatus];
     const channel = {
         subject: <Box ml={"3px"}><Typography variant="body1">{channelName}</Typography></Box>,
@@ -29,7 +31,26 @@ function Duration(props) {
                     disabled={true}
                     mt={"1px"}
                     mb={"1px"}
-                ></SmallMarginTextField> 
+                ></SmallMarginTextField>
+                <Box display="flex" flexDirection="column" ml="10px" mr="2px" alignItems="center">
+                    <Typography style={{fontSize:"8px"}}>
+                        Remains
+                    </Typography>
+                    <SmallMarginTextField
+                        variant="outlined"
+                        margin="dense"
+                        bgcolor={bgColor}
+                        value={remains}
+                        disabled={true}
+                        fontSize={"12px"}
+                        width="110px"
+                        pt="3px"
+                        pb="3px"
+                        height="auto"
+                    >                    
+                    </SmallMarginTextField>
+                </Box> 
+
                 {/* <SmallButton
                     ml="10px"
                     width="120px"
