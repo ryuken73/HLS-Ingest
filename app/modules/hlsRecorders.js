@@ -99,9 +99,15 @@ export const createRecorder = (channelNumber, createdByError=false) => (dispatch
         dispatch(setRecorderStatus({channelNumber, recorderStatus: 'started'}));
         dispatch(setRecorderInTransition({channelNumber, inTransition:false}));
     }
+    const isPositiveDuration = timemark => {
+        const firstDigit = parseInt(timemark.split(':')[0]);
+        if(firstDigit < 0) return false;
+        return true
+    }
     const progressHandler = progress => {
         console.log(progress)
-        dispatch(setDuration({channelNumber, duration:progress.timemark}));
+        const {timemark} = progress;
+        isPositiveDuration(timemark) && dispatch(setDuration({channelNumber, duration:progress.timemark}));
     }
     const errorHandler = error => {
         channelLog.error(`error occurred`);
