@@ -33,7 +33,8 @@ function HLSIngest(props) {
         recorderStatus="stopped",     
         sourceFrom,
         liveSource,
-        clipSource
+        clipSource,
+        isPlaybackAlive=false
     } = props;
 
     const {
@@ -161,6 +162,11 @@ function HLSIngest(props) {
                 width="618px" height="400px"
             >
                 <Box fontFamily="Roboto, Helvetica, Arial, sans-serif">{blankMessage[recorderStatus]}</Box>
+                {isPlaybackAlive && recorderStatus === 'started' &&
+                    <Box fontFamily="Roboto, Helvetica, Arial, sans-serif">start playback</Box>
+                }
+
+
             </BorderedBox>
             <TimePointerContainer
                     channelNumber={channelNumber} 
