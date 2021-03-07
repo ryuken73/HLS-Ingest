@@ -37,7 +37,8 @@ const HLSPlayer = (props) => {
 
     const {
         setRecorderStartTimeSeconds,
-        setRecorderStopTimeSeconds
+        setRecorderStopTimeSeconds,
+        setClipLengthSeconds
     } = props.HLSRecordersActions;
 
     // todo: move below in config file
@@ -142,9 +143,14 @@ const HLSPlayer = (props) => {
         if(eventName === 'durationchange'){
             setRecorderStartTimeSeconds({channelNumber, startTimeSeconds:0});
             const duration = player.duration();
-            isValidStopDuration(duration) ? 
-            setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:duration}) :
-            setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:0});
+            let realDuration;
+            if(isValidStopDuration(duration)){
+                realDuration = duration;
+            } else {
+                realDuration = 0;
+            }
+            setClipLengthSeconds({channelNumber, clipLengthSeconds: realDuration})
+            setRecorderStopTimeSeconds({channelNumber, stopTimeSeconds:realDuration}) 
         }
         if(eventName === 'abort' && enableAutoRefresh !== null){
             refreshTimer = setInterval(() => {

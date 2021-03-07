@@ -55,7 +55,9 @@ function TimePointer(props) {
         stopTime="00:00:00.00",
         durationTime="00:00:00.00",
         bgColors={},
-        timeInputDisabled=false
+        timeInputDisabled=false,
+        startTimeChanged=false,
+        stopTimeChanged=false
     } = props;
     const {
         setTimeInputFocused
@@ -81,8 +83,11 @@ function TimePointer(props) {
     // const pointerName = `Set Time [${channelNumber}]`
     const pointerName = `Set Time`
     // const bgColor = bgColors['stopped'];
-    const textColor = timeInputDisabled ? 'darkslategrey' : 'white';
-    const durationTextColor = timeInputDisabled ? 'darkslategrey' : 'yellow';
+    const timeChanged = startTimeChanged || stopTimeChanged;
+    const startTextColor = timeInputDisabled ? 'darkslategrey' : startTimeChanged ? 'yellow' : 'white';
+    const stopTextColor = timeInputDisabled ? 'darkslategrey' : stopTimeChanged ? 'yellow' : 'white';
+    const durationTextColor = timeInputDisabled ? 'darkslategrey' : timeChanged ? 'yellow' : 'white';
+
     const channel = {
         subject: <Box ml={"3px"}><Typography variant="body1">{pointerName}</Typography></Box>,
         content: (
@@ -91,7 +96,7 @@ function TimePointer(props) {
                     tTitle="IN"
                     iBgColorIn={bgColorIn}
                     iValue={startTime}
-                    iTextColor={textColor}
+                    iTextColor={startTextColor}
                     iOnFocus={setFocused('startTimeFocused', true)}
                     iOnBlur={setFocused('startTimeFocused', false)}
                     iDisabled={timeInputDisabled}
@@ -101,7 +106,7 @@ function TimePointer(props) {
                     tTitle="OUT"
                     iBgColorIn={bgColorOut}
                     iValue={stopTime}
-                    iTextColor={textColor}
+                    iTextColor={stopTextColor}
                     iOnFocus={setFocused('stopTimeFocused', true)}
                     iOnBlur={setFocused('stopTimeFocused', false)}
                     iDisabled={timeInputDisabled}

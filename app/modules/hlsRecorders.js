@@ -32,7 +32,8 @@ for(let channelNumber=1 ; channelNumber<=NUMBER_OF_CHANNELS ; channelNumber++){
         startTimeSeconds: 0,
         stopTimeSeconds: 0,
         startTimeFocused: false,
-        stopTimeFocused: false
+        stopTimeFocused: false,
+        clipLengthSeconds: 0
     }
     recorders.set(channelNumber, hlsRecorder);
 }
@@ -45,6 +46,7 @@ const SET_RECORDER_INTRANSITION = 'hlsRecorders/SET_RECORDER_INTRANSITION';
 const SET_RECORDER_START_TIME_SECONDS = 'hlsRecorders/SET_RECORDER_START_TIME_SECONDS';
 const SET_RECORDER_STOP_TIME_SECONDS = 'hlsRecorders/SET_RECORDER_STOP_TIME_SECONDS';
 const SET_TIME_INPUT_FOCUSED = 'hlsRecorders/SET_TIME_INPUT_FOCUSED';
+const SET_CLIP_LENGTH_SECONDS = 'hlsRecorders/SET_CLIP_LENGTH_SECONDS';
 
 // action creator
 export const setDuration = createAction(SET_DURATION);
@@ -54,6 +56,7 @@ export const setRecorderInTransition = createAction(SET_RECORDER_INTRANSITION);
 export const setRecorderStartTimeSeconds = createAction(SET_RECORDER_START_TIME_SECONDS);
 export const setRecorderStopTimeSeconds = createAction(SET_RECORDER_STOP_TIME_SECONDS);
 export const setTimeInputFocused = createAction(SET_TIME_INPUT_FOCUSED);
+export const setClipLengthSeconds = createAction(SET_CLIP_LENGTH_SECONDS);
 
 
 import log from 'electron-log';
@@ -288,6 +291,18 @@ export default handleActions({
         const {channelNumber, duration} = action.payload;
         const recorder = {...state.recorders.get(channelNumber)};
         recorder.duration = duration;
+        const recorders = new Map(state.recorders);
+        recorders.set(channelNumber, recorder);
+        return {
+            ...state,
+            recorders
+        }
+    },
+    [SET_CLIP_LENGTH_SECONDS]: (state, action) => {
+        // console.log('%%%%%%%%%%%%%%%%', action.payload);
+        const {channelNumber, clipLengthSeconds} = action.payload;
+        const recorder = {...state.recorders.get(channelNumber)};
+        recorder.clipLengthSeconds = clipLengthSeconds;
         const recorders = new Map(state.recorders);
         recorders.set(channelNumber, recorder);
         return {

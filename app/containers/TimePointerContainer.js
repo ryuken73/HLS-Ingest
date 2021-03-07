@@ -17,7 +17,7 @@ function mapStateToProps(state, ownProps) {
   const {channelNumber} = ownProps;
   const hlsRecorder = state.hlsRecorders.recorders.get(channelNumber);
   const hlsPlayer = state.hlsPlayers.players.get(channelNumber);
-  const {startTimeSeconds, stopTimeSeconds, inTransition, recorderStatus} = hlsRecorder;
+  const {startTimeSeconds, stopTimeSeconds, clipLengthSeconds, inTransition, recorderStatus} = hlsRecorder;
   const durationTimeSeconds = stopTimeSeconds - startTimeSeconds;
   const {seeked} = hlsPlayer;
 
@@ -25,13 +25,19 @@ function mapStateToProps(state, ownProps) {
   const activeSource = channelActiveSource.get(channelNumber);
   const timeInputDisabled = inTransition || recorderStatus === 'started' || activeSource === 'live';
 
+  const startTimeChanged = startTimeSeconds !== 0;
+  const stopTimeChanged = stopTimeSeconds !== clipLengthSeconds;
+
+
   return {
     ...ownProps,
     recorderStatus,
     startTime: secondsToTime(startTimeSeconds),
     stopTime: secondsToTime(stopTimeSeconds),
     durationTime: secondsToTime(durationTimeSeconds),
-    timeInputDisabled
+    timeInputDisabled,
+    startTimeChanged,
+    stopTimeChanged
   }
 }
 
