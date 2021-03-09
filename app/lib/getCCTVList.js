@@ -1,3 +1,4 @@
+const {order} = require('../utils')
 module.exports = () => {
     const electronUtil = require('./electronUtil')
     const defaultJsonFile = electronUtil.getAbsolutePath('config/default/sources.json', true);
@@ -13,6 +14,7 @@ module.exports = () => {
         return resultsUniq;
     }
     const mergedSources = distinctByKey([...defaultJson.sources, ...customJson.sources], 'title');
+    const orderByTitle = mergedSources.sort(order.orderByKey('title'));
     return mergedSources;
 }
 

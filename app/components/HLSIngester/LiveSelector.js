@@ -75,7 +75,7 @@ function LiveSelector(props) {
                 <Autocomplete
                     disabled={disabled}
                     onFocus={handleChange}
-                    placeholder="Live CCTV"
+                    placeholder={`Live CCTV(${sources.length})`}
                     options={sources}
                     // onChange={setLiveSource}
                     onHighlightChange={setLiveSource}

@@ -298,6 +298,28 @@ const browserStorage = {
     clear: () => this.storage.clear()
 }
 
+const sortBy = (a,b) => {
+	return key => {
+		// if key value is empty, push back
+		if(a[key] === '') return 1;
+		if(b[key] === '') return -1;
+		// normal order
+		if(a[key] > b[key]) return 1;
+		if(a[key] < b[key]) return -1;
+		return false
+	}
+}
+
+const order = {
+    orderByKey: (keyName) => {
+        return (a,b) => {
+            const sortByKey = sortBy(a,b);
+            const result = sortByKey(keyName);
+            return result;
+        }
+    }
+}
+
 module.exports = {
     browserStorage,
     clone,
@@ -305,7 +327,8 @@ module.exports = {
     file,
     number,
     date,
-    string
+    string,
+    order
 }
 
 // const trottled = fp.throttle(100, console.log);
