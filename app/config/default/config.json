@@ -19,14 +19,6 @@
     "overlayContent": "Default Overlay",
     "enableAutoRefresh": true
   },
-  "REMOTE_TARGETS": {
-    "1": "udp://127.0.0.1:9991",
-    "2": "udp://127.0.0.1:9992"
-  },
-  "LOCAL_PLAYBACK_TARGETS": {
-    "1": "udp://127.0.0.1:8881",
-    "2": "udp://127.0.0.1:8882"
-  },
   "FFPLAY_OFFSET": {
     "1": {"OFFSET_TOP": 235, "OFFSET_LEFT": 12},
     "2": {"OFFSET_TOP": 232, "OFFSET_LEFT": 645}
@@ -36,9 +28,36 @@
     "HEIGHT": 313
   },
   "FFPLAY_FAST_PLAY": false,
-  "FFMPEG_OPTIONS": {
-    "INPUT": ["-re"],
-    "OUTPUT": ["-f", "mpegts", "-an", "-c:v", "mpeg2video", "-g", 15, "-b:v", "8000k", "-maxrate", "8000k", "-bufsize", "8000k"]
-  },
+  "FFMPEG_INPUT_OPTIONS" : ["-re"],
+  "FFMPEG_OUTPUTS": [
+    {
+      "channelNumber": "1",
+      "outputs": [
+        {
+          "target": "udp://127.0.0.1:9991",
+          "option": ["-f mpegts", "-an", "-c:v mpeg2video", "-g 15", "-b:v 8000k", "-maxrate 8000k", "-bufsize 8000k"]
+        },
+        {
+          "playback": true,
+          "target": "udp://127.0.0.1:8881",
+          "option": ["-f mpegts", "-an", "-c:v mpeg2video", "-g 15", "-b:v 8000k", "-maxrate 8000k", "-bufsize 8000k"]
+        }
+      ]
+    },
+    {
+      "channelNumber": "2",
+      "outputs": [
+        {
+          "target": "udp://127.0.0.1:9992",
+          "option": ["-f mpegts", "-an", "-c:v mpeg2video", "-g 15", "-b:v 8000k", "-maxrate 8000k", "-bufsize 8000k"]
+        },
+        {
+          "playback": true,
+          "target": "udp://127.0.0.1:8882",
+          "option": ["-f mpegts", "-an", "-c:v mpeg2video", "-g 15", "-b:v 8000k", "-maxrate 8000k", "-bufsize 8000k"]
+        }
+      ]
+    }          
+  ],
   "DEFAULT_SOURCE": "live"
 }

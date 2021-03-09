@@ -5,7 +5,7 @@ const config = getDefaultConfig();
 
 const {
     NUMBER_OF_CHANNELS,
-    LOCAL_PLAYBACK_TARGETS
+    FFMPEG_OUTPUTS
 } = config;
 
 // action types
@@ -25,8 +25,13 @@ export const forkPlaybackProcess = props => (dispatch, getState) => {
         binary = ffplayBinary,
         forkArgs = ['-left', 10, '-top', 10, '-alwaysontop', '-sn']
     } = props;
-    const channelTarget = LOCAL_PLAYBACK_TARGETS[channelNumber.toString()];
-    const args = [...forkArgs, '-i', channelTarget];
+    // const channelTarget = LOCAL_PLAYBACK_TARGETS[channelNumber.toString()];    
+    const ffmpegOutputs = FFMPEG_OUTPUTS.find(output => {
+        return parseInt(output.channelNumber) === channelNumber;
+    })
+    const targetForPlayback = ffmpegOutputs.outputs.find(target => target.playback === true);
+    const playbackAddress = targetForPlayback.target; 
+    const args = [...forkArgs, '-i', playbackAddress];
     console.log('$$$$ forkplayback process', args)
     const ffplay = newChild({
         binary,

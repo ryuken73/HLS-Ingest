@@ -4,8 +4,8 @@ const log = require('electron-log');
 
 const {getDefaultConfig} = require('./getConfig'); 
 const config = getDefaultConfig();
-const inputOptions = config.FFMPEG_OPTIONS.INPUT;
-const outputOptions = config.FFMPEG_OPTIONS.OUTPUT;
+const inputOptions = config.FFMPEG_INPUT_OPTIONS;
+// const outputOptions = config.FFMPEG_OPTIONS.OUTPUT;
 
 const sameAsBefore = initialValue => {
     let previousValue = initialValue;
@@ -39,17 +39,21 @@ class RecoderHLS extends EventEmitter {
     constructor(options){
         super();
         const {
+            channelNumber=1,
             name='channel1',
             src='', 
             target='target.mp4', 
+            targetOptions=[],
             enablePlayback=false, 
             ffmpegBinary='./ffmpeg.exe',
             renameDoneFile=false,
             // activeSource=''
         } = options;
+        this._channelNumber = channelNumber;
         this._name = name;
         this._src = src;
         this._target = target;
+        this._targetOptions = targetOptions;
         this._createTime = Date.now();
         this._enablePlayback = enablePlayback;
         this._ffmpegBinary = ffmpegBinary;
@@ -87,9 +91,11 @@ class RecoderHLS extends EventEmitter {
         this.log.info(`recoder initialized...`)
     }
 
+    get channelNumber() { return this._channelNumber }
     get name() { return this._name }
     get src() { return this._src }
     get target() { return this._target }
+    get targetOptions() { return this._targetOptions }
     get enablePlayback() { return this._enablePlayback }
     get renameDoneFile() { return this._renameDoneFile }
     get isRecording() { return this._isRecording }
@@ -117,6 +123,10 @@ class RecoderHLS extends EventEmitter {
     set target(target) { 
         if(this.isBusy) throw new Error("because recorder is busy, can't change");
         this._target = target;
+    }   
+    set targetOptions(options) { 
+        if(this.isBusy) throw new Error("because recorder is busy, can't change");
+        this._targetOptions = options;
     }   
     set command(cmd) { this._command = cmd }
     set isRecording(bool) { this._isRecording = bool }
@@ -183,7 +193,7 @@ class RecoderHLS extends EventEmitter {
             outputOpts=[]
         } = props
         const inputOptsMerged = [...inputOptions, ...inputOpts];
-        const outputOptsMerged = [...outputOptions, ...outputOpts];
+        let outputOptsMerged; 
         if(this.isBusy) {
             this.log.warn('already started!. stop first');
             throw new Error('already started!. stop first')
@@ -194,14 +204,25 @@ class RecoderHLS extends EventEmitter {
         try {
             // if file path contains back slash, ffmpeg fails. replace!
             const srcNormalized = this._src.replace(/\\/g, '/');
-            this.command = ffmpeg(srcNormalized).inputOptions(inputOptsMerged);
-            if(typeof(this._target) === 'string'){
-                this.command = this.command.output(this._target).outputOptions(outputOptsMerged);
-            } else {
-                for(let i=0; i < this._target.length ;i++){
-                    this.command = this.command.output(this._target[i]).outputOptions(outputOptions);
-                }
+            // set input and input options
+            this.command = ffmpeg(srcNormalized).inputOptions(inputOptsMerged); 
+            // set output and output options (output can be multiple)
+            const {outputs} = this.target;
+            console.log('#### outputs:', outputs);
+            for(let i=0; i < outputs.length; i++){
+                outputOptsMerged = [...outputs[i].option, ...outputOpts];
+                this.command = this.command.output(outputs[i].target).outputOptions(outputOptsMerged);  
             }
+            // if(typeof(this._target) === 'string'){
+            //     outputOptsMerged = [...outputOptions, ...outputOpts];
+            //     this.command = this.command.output(this._target).outputOptions(outputOptsMerged);
+            // } else {
+            //     for(let i=0; i < this._target.length ;i++){
+            //         const outputNumber = i + 1;
+            //         outputOptsMerged = [...outputOptions[outputNumber.toString()], ...outputOpts];
+            //         this.command = this.command.output(this._target[i]).outputOptions(outputOptsMerged);
+            //     }
+            // }
         } catch (error) {
             this.log.error(error.message)
         }
@@ -246,6 +267,7 @@ class RecoderHLS extends EventEmitter {
 
 const createHLSRecoder = options => {
     const {
+        channelNumber=1,
         name= 'channel1',
         src= url,
         target='d:/temp/cctv_kbs_ffmpeg.mp4', 

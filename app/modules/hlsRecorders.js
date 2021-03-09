@@ -10,8 +10,9 @@ const config = getDefaultConfig();
 const {
     NUMBER_OF_CHANNELS,
     CHANNEL_PREFIX,
-    REMOTE_TARGETS={},
-    LOCAL_PLAYBACK_TARGETS={}    
+    // REMOTE_TARGETS={},
+    // LOCAL_PLAYBACK_TARGETS={},
+    FFMPEG_OUTPUTS
 } = config;
 
 const INITIAL_DURATION = '00:00:00.00';
@@ -89,6 +90,7 @@ export const createRecorder = (channelNumber, createdByError=false) => (dispatch
 
     const ffmpegPath = getAbsolutePath('bin/ffmpeg.exe', true);
     const recorderOptions = {
+        channelNumber,
         name: channelName,
         src: url, 
         ffmpegBinary: ffmpegPath,
@@ -161,13 +163,25 @@ const getIngestSource = (channelActiveSource, liveSource, clipSource) => {
     return clipSource;
 }
 
-const getIngestTarget = channelNumber => {
-    return REMOTE_TARGETS[channelNumber.toString()] || null;
+// const getIngestTarget = channelNumber => {
+//     return REMOTE_TARGETS[channelNumber.toString()] || null;
+// }
+
+// const getLocalTarget = channelNumber => {
+//     return LOCAL_PLAYBACK_TARGETS[channelNumber.toString()] || null;
+// }
+
+const getTargetObject = channelNumber => {
+    return FFMPEG_OUTPUTS.find(output => {
+        return output.channelNumber === channelNumber.toString();
+    })
 }
 
-const getLocalTarget = channelNumber => {
-    return LOCAL_PLAYBACK_TARGETS[channelNumber.toString()] || null;
-}
+// const getOptionObject = channelNumber => {
+//     return FFMPEG_OPTIONS.OUTPUT.find(option => {
+//         return option.channelNumber === channelNumber.toString();
+//     })
+// }
 
 export const startRecording = (channelNumber) => (dispatch, getState) => {
     return new Promise((resolve, reject) => {
@@ -191,12 +205,12 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
             channelLog.info(`start startRecroding() recorder.createTime:${recorder.createTime}`)
         
             recorder.src = source.url;
-            // recorder.ffmpegOptSS = startTimeSeconds;
-            // recorder.ffmpegOptTO = stopTimeSeconds;
-            // recorder.activeSource = channelActiveSource;
-            const remoteTarget = getIngestTarget(channelNumber);
-            const localTarget = getLocalTarget(channelNumber);
-            recorder.target = [remoteTarget, localTarget]
+            // const remoteTarget = getIngestTarget(channelNumber);
+            // const localTarget = getLocalTarget(channelNumber);
+            const channelTarget = getTargetObject(channelNumber);
+            // const channelOutputOption = getOptionObject(channelNumber);
+            recorder.target = channelTarget;
+            // recorder.targetOptions = channelOutputOption;
             
             dispatch(setRecorderInTransition({channelNumber, inTransition:true}))
             dispatch(setRecorderStatus({channelNumber, recorderStatus: 'starting'}))
@@ -210,7 +224,7 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
                     const endTimestamp = Date.now();
                     const startTime = utils.date.getString(new Date(startTimestamp),{sep:'-'})
                     const endTime = utils.date.getString(new Date(endTimestamp),{sep:'-'})
-                    const url = remoteTarget;
+                    // const url = remoteTarget;
                     const title = source.title;
     
                     const clipData = {
@@ -220,7 +234,7 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
                         endTime,
                         startTimestamp,
                         endTimestamp,
-                        url,
+                        // url,
                         title,
                         duration,
                     }
@@ -230,7 +244,9 @@ export const startRecording = (channelNumber) => (dispatch, getState) => {
     
                 } catch (error) {
                     if(error){
-                        channelLog.error(error)
+                        channelLog.error(error);
+                        dispatch(refreshRecorder({channelNumber}));
+                        dispatch(destroyPlaybackProcess({channelNumber}));
                     }
                 }
             })
