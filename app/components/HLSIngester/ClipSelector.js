@@ -93,7 +93,7 @@ function ClipSelector(props) {
                 <Autocomplete
                     disabled={disabled}
                     onFocus={handleChange}
-                    placeholder="Saved Clip"
+                    placeholder={`Saved Clip(${clips.length})`}
                     options={clips}
                     // onChange={setClipSource}
                     onHighlightChange={setClipSource}
