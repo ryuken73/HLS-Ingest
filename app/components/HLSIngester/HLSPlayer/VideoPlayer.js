@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Controls from './Controls.json';
-// import videojs from 'video.js';
+import videojs from 'video.js';
 import overlay from 'videojs-overlay';
 import marker from 'videojs-markers-plugin'
 

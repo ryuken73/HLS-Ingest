@@ -75,6 +75,9 @@
       "config/",
       "video-js.css",
       "videojs-overlay.css",
+      "videojs-markers-plugin.js",
+      "videojs-markers-plugin.min.js",
+      "videojs.markers.plugin.css",
       "config.json"
     ],
     "dmg": {
