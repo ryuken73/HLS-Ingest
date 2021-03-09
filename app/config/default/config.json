@@ -48,13 +48,13 @@
       "channelNumber": "2",
       "outputs": [
         {
-          "target": "udp://127.0.0.1:9992",
-          "option": ["-f mpegts", "-an", "-c:v mpeg2video", "-g 15", "-b:v 8000k", "-maxrate 8000k", "-bufsize 8000k"]
+          "target": "\"DeckLink Duo (1)\"",
+          "option": ["-filter_complex", "\"[0:v]split[vin1][vin2];[vin1]scale=1920x1080[vscale];[vscale]format=pix_fmts=uyvy422[vpix];[vpix]setfield=tff[vout1];[vin2]scale=480x270[vout2]\"", "-map", "\"[vout1]\"", "-top 1", "-r 30000/1001", "-f decklink"]
         },
         {
           "playback": true,
           "target": "udp://127.0.0.1:8882",
-          "option": ["-f mpegts", "-an", "-c:v mpeg2video", "-g 15", "-b:v 8000k", "-maxrate 8000k", "-bufsize 8000k"]
+          "option": ["-map", "\"[vout2]\"", "-f mpegts", "-an", "-c:v mpeg2video", "-g 4", "-b:v 8000k", "-maxrate 8000k", "-bufsize 8000k"]
         }
       ]
     }          
